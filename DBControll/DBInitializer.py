@@ -1,0 +1,61 @@
+from DBControll.DBConnection import DBConnection
+
+
+necessary_table_to_create = {
+    "node_table":
+        """
+            CREATE TABLE node_table
+            (
+                node_name VARCHAR(255) PRIMARY KEY,
+                node_dpid VARCHAR(255),
+                node_mac VARCHAR(255)
+            );
+        """,
+
+    "user_table":
+        """
+            CREATE TABLE user_table
+            (
+                user_ip VARCHAR(255) PRIMARY KEY,
+                user_mac VARCHAR(255),
+                user_vlan VARCHAR(255),
+                user_path VARCHAR(255),
+                user_type VARCHAR(255)
+            );
+        """,
+
+    "rule_table":
+        """
+            CREATE TABLE rule_table
+            (
+                user_ip VARCHAR(255),
+                user_rule VARCHAR(255),
+                status VARCHAR(255)
+            );
+        """
+}
+
+
+class DBInitializer:
+    def execute(self):
+        existing_tables = self.get_existing_tables()
+        self.__create_inexist_table(existing_tables)
+
+    def get_existing_tables(self):
+        with DBConnection() as connection:
+            cursor = connection.cursor()
+            cursor.execute("SELECT * FROM sqlite_master WHERE type='table'")
+            records = cursor.fetchall()
+
+        return [single_row["tbl_name"] for single_row in records]
+
+    def __create_inexist_table(self, existing_tables):
+        for necessary_table, table_creating_command in necessary_table_to_create.items():
+            if necessary_table not in existing_tables:
+                self.create_table_with_specefied_command(table_creating_command)
+
+    def create_table_with_specefied_command(self, command):
+        with DBConnection() as connection:
+            cursor = connection.cursor()
+            cursor.execute(command)
+            connection.commit()

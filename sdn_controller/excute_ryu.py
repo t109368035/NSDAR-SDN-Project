@@ -17,6 +17,6 @@ class Excute_ryu(QThread):
 
     def main(self):
         sys.argv.append('sdn_controller\\start_recive_restful\\ofctl_rest.py')
-        sys.argv.append('--verbose')
-        sys.argv.append('--enable-debugger')
+        #sys.argv.append('--verbose')
+        #sys.argv.append('--enable-debugger')
         manager.main()
