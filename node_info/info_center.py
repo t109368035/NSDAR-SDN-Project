@@ -1,3 +1,4 @@
+#尚未完成收到節點資訊後，處理的程序。
 import paho.mqtt.client as mqtt
 import json, time, threading
 from PyQt5.QtCore import QThread, pyqtSignal, QTimer
@@ -18,13 +19,13 @@ class MQTT(QThread):
         self.client.on_connect = self.on_connect
         self.dpid_dict = dict()
         self.dpid_flag = True
-        self.iw_dict = dict()
         self.dpid_timer = QTimer(self)
         self.dpid_timer.timeout.connect(self.dpid)
         self.dpid_timer.start(2000)
-        self.iw_timer = QTimer(self)
-        self.iw_timer.timeout.connect(self.iw_info)
-        self.iw_timer.start(2000)
+        #self.iw_dict = dict()
+        #self.iw_timer = QTimer(self)
+        #self.iw_timer.timeout.connect(self.iw_info)
+        #self.iw_timer.start(2000)
         ConnectDatabase()
 
     def on_connect(self, client, userdata, flags, rc, properties=None):
@@ -41,26 +42,16 @@ class MQTT(QThread):
                 node_info = data['dpidinfo'][node_ID]
                 NodeTable().insert_node(node_name=node_ID, node_dpid=node_info['dpid'], node_mac=node_info['mac'])
                 self.dpid_info.emit('add node')    
-            """
-            nodetodpid = data['dpidinfo']
-            node_ID = list(nodetodpid.keys())[0]
-            if node_ID not in self.dpid_dict:
-                self.dpid_dict.update(nodetodpid)
-                if len(self.dpid_dict) == 3:
-                    print(self.dpid_dict)
-                    self.dpid_flag = False
-                    self.dpid_info.emit(self.dpid_dict)
-            """
+
+        elif data.get('chquality'):
+            print(data)
+
         elif data.get('iwinfo'):
             pathiw = data['iwinfo']
             path_ID = list(pathiw.keys())
             for key in path_ID:
-                #signal = float(pathiw[key]['signal'])
-                #tx_bitrate = float(pathiw[key]['tx_bitrate'])
                 self.iw_dict[key] = pathiw[key]
                 if len(self.iw_dict) == len(NodeTable().pop_all_node()):
-                    #print('signal:{}, tx bitrate:{}'.format(signal, tx_bitrate))
-                    #print(self.iw_dict)
                     self.iw_info_d.emit(self.iw_dict)
                     self.iw_dict = dict()
 
@@ -75,7 +66,15 @@ class MQTT(QThread):
     def dpid(self):
         if self.dpid_flag:
             self.publish('info_request', 'dpidrequest')
+        else:
+            self.dpid_timer.stop()
         
+    def iperf_test_request(self, stage):
+        if stage ==  1:
+            self.publish('info_request', 'test1')
+        elif stage ==2:
+            self.publish('info_request', 'test2')
+
     def iw_info(self):
         self.publish('info_request', 'iwrequest')
 
@@ -84,16 +83,11 @@ class MQTT(QThread):
 
     def run(self):
         sub = threading.Thread(target=self.subscribe, daemon=True)
-        #pub_dpid = threading.Thread(target=self.dpid, daemon=True)
-        #pub_iwinfo = threading.Thread(target=self.iw_info, daemon=True)
         sub.start()
-        #pub_dpid.start()
-        #pub_iwinfo.start()
-        #while True:
-        #    command = input()
-        #    if command == "finish":
-        #        break
-        #print("leaving ....... ")
+    
+        self.iperf_test_request(1)
+        time.sleep(3)
+        self.iperf_test_request(2)
 
 if __name__ == '__main__':
     nodeinfo = MQTT()

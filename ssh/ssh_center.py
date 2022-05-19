@@ -8,8 +8,10 @@ class sshCenter():
 
     def send_command(self, ip, command):
         self.ssh_client.connect(hostname=ip, username='pi', password='raspberry')
-        self.ssh_client.exec_command(command)
+        stdin, stdout, stderr = self.ssh_client.exec_command(command)
+        out = stdout.read().decode().strip()
         self.ssh_client.close()
+        return out
 
 if __name__ == '__main__':
     c = sshCenter()
