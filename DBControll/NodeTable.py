@@ -1,6 +1,4 @@
-import re
 from DBControll.DBConnection import DBConnection
-
 
 class NodeTable:
     def insert_node(self, node_name, node_dpid, node_mac):

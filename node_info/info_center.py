@@ -4,6 +4,7 @@ import json, time, threading
 from PyQt5.QtCore import QThread, pyqtSignal, QTimer
 from DBControll.ConnectDatabase import ConnectDatabase
 from DBControll.NodeTable import NodeTable
+from path_calculate.dikstra_graph import Graph
 
 MQTT_BROKER = '192.168.1.143'
 MQTT_PORT = 1883
@@ -22,6 +23,7 @@ class MQTT(QThread):
         self.dpid_timer = QTimer(self)
         self.dpid_timer.timeout.connect(self.dpid)
         self.dpid_timer.start(2000)
+        self.etx_list = list()
         #self.iw_dict = dict()
         #self.iw_timer = QTimer(self)
         #self.iw_timer.timeout.connect(self.iw_info)
@@ -44,7 +46,16 @@ class MQTT(QThread):
                 self.dpid_info.emit('add node')    
 
         elif data.get('chquality'):
-            print(data)
+            packetsize = 12112 #bits
+            bandwidth = data['chquality']['bandwidth']
+            etx = data['chquality']['etx']
+            ett = data['chquality']['start'], data['chquality']['end'],  etx*(packetsize/bandwidth)
+            print(type(ett))
+            print(ett)
+            #self.etx_list.append(ett)
+            #if len(self.etx_list) == 4:
+            #    path = Graph(self.etx_list)
+            #    print(list(path.dijkstra("map15", "out")))
 
         elif data.get('iwinfo'):
             pathiw = data['iwinfo']

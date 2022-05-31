@@ -32,6 +32,16 @@ necessary_table_to_create = {
                 user_rule VARCHAR(255),
                 status VARCHAR(255)
             );
+        """,
+    
+    "app_table":
+        """
+            CREATE TABLE app_table
+            (
+                user_ip VARCHAR(255),
+                app_name VARCHAR(255),
+                app_ip VARCHAR(255)
+            );
         """
 }
 
