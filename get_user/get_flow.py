@@ -1,15 +1,21 @@
-import subprocess
+import subprocess, time
+from PyQt5.QtCore import QThread,pyqtSignal
 from DBControll.ConnectDatabase import ConnectDatabase
 from DBControll.AppTable import AppTable
 
 '''
 擷取在map的live flow
 '''
-class Get_Live_Flow:
-    def __init__(self, vlan, ip):
+class Get_Live_Flow(QThread):
+    def __init__(self, vlan=None, ip=None):
+        super().__init__()
         self.vlan = vlan
         self.ip = ip
         ConnectDatabase()
+    
+    def run(self):
+        if self.vlan:
+            self.get()
 
     def check_access_node(self):
         if int(self.vlan) <= 150:
@@ -30,6 +36,9 @@ class Get_Live_Flow:
 
     def get(self):
         #####將單一使用者的和其使用的APP製作成字典
+        #print('before delay{}: {}'.format(self.vlan,time.ctime()))
+        time.sleep(20)
+        #print('after delay{}: {}'.format(self.vlan, time.ctime()))
         user_ip = self.ip
         app_dict = dict()
         app_dict[user_ip] = dict()
@@ -38,18 +47,18 @@ class Get_Live_Flow:
             client_app = flow['protocol']['l7']
             server_ip = flow['server']['ip']
             if user_ip == client_ip and server_ip != '10.10.2.1' and 'DNS' not in client_app and 'DHCP' not in client_app and 'SSDP' not in client_app:
-                #print(flow)
+                #print("==========\n{}\n==========\n".format(flow))
                 app_dict[user_ip][client_app] = set()
                 app_dict[user_ip][client_app].add(server_ip)
         print(app_dict)
-        print('\n\n\n')
+        #print('\n\n\n')
 
         #####將使用者使用APP以及其ip列出
         AppTable().delete_user_app(user_ip)
         if app_dict[user_ip]:
-            print(user_ip)
+            #print(user_ip)
             for app, ip in app_dict[user_ip].items():
-                print('{}: {}'.format(app, list(ip)))
+                #print('{}: {}'.format(app, list(ip)))
                 AppTable().insert_a_app(user_ip, app, ','.join(list(ip)))   
             #print('\n')
 

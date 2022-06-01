@@ -6,11 +6,7 @@ from PyQt5.QtCore import QThread
 class Excute_ryu(QThread):
     def __init__(self,parent):
         super().__init__(parent)
-        self.capture = None
         self.parent = parent
-
-    def serve(self):
-        self.start()
 
     def run(self):
         self.main()

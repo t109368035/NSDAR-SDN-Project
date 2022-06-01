@@ -18,6 +18,14 @@ class AppTable:
             cursor.execute(command)
             connection.commit()
 
+    def delete_all(self):
+        command = "DELETE FROM app_table;"
+
+        with DBConnection() as connection:
+            cursor = connection.cursor()
+            cursor.execute(command)
+            connection.commit()
+
 """
     def pop_user_rule(self, user_ip):
         command = "SELECT * FROM rule_table WHERE user_ip='{}';".format(user_ip)

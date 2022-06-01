@@ -1,52 +1,41 @@
 import re
+from telnetlib import STATUS
+from urllib import response
 from DBControll.ConnectDatabase import ConnectDatabase
 from DBControll.NodeTable import NodeTable
 from DBControll.UserTable import UserTable
 from DBControll.RuleTable import RuleTable
 from sdn_controller.rest_api_command import PostRestAPI
-#from urllib import response
 import requests
 
 class SetRule:
     def __init__(self):
         ConnectDatabase()
 
-    def post_request(self, user_ip=None, rule_list=None, action='add'):
+    def post_request(self, rule,  action):
         url = "http://localhost:8080/stats/flowentry/"+action
         headers = {'Content-Type': 'text/plain'}
-        if action == 'add':
-            self.add_rule(url, headers, user_ip, rule_list)
-        else:
-            self.delete_rule(url, headers)
-        '''for rule in rule_list:
-            response = requests.request("POST", url, headers=headers, data=rule)
-            if action == 'add':
-                RuleTable().insert_a_rule(user_ip, rule, self.add_rule(response))    
-            else:
-                print('{}\n{}'.format(self.delete_rule(response), rule))'''
-        #print(RuleTable().pop_user_rule(user_ip))
+        response = requests.request("POST", url, headers=headers, data=rule)
+        return str(response)
     
-    def delete_rule(self, url, headers):
-        for ip in UserTable().pop_all_user():
-            for rule in RuleTable().pop_user_rule(ip):
-                requests.request("POST", url, headers=headers, data=rule)
-            RuleTable().delete_user_rule(ip)
-            UserTable().delete_user(ip)
+    def delete_rule(self, action='all'):
+        if action == 'all':
+            for ip in UserTable().pop_all_user():
+                for rule in RuleTable().pop_user_rule(ip):
+                    print('Delete {}, {}'.format(self.check_status(self.post_request(rule, 'delete')), rule))
+                RuleTable().delete_user_rule(ip)
+                UserTable().delete_user(ip)
 
-    def add_rule(self, url, headers, user_ip, rule_list):
+    def add_rule(self, user_ip, rule_list):
         for rule in rule_list:
-            response = requests.request("POST", url, headers=headers, data=rule)
-            if '200' in str(response):
-                status = 'Add Success'
-            else:
-                status = 'Add Fail'
+            status = self.check_status(self.post_request(rule, 'add'))
             RuleTable().insert_a_rule(user_ip, rule, status)
-
-    '''def add_rule(self, response):        
-        if '200' in str(response):
-            return 'Add Success'
+    
+    def check_status(self, status):
+        if '200' in status:
+            return 'Success'
         else:
-            return 'Add Fail' '''
+            return 'Fail'
 
     def excute(self,ip_address):
         rule = list()
@@ -63,8 +52,7 @@ class SetRule:
                     port = 2
                 else:
                     port = 1
-                rule = rule + PostRestAPI(user_info=user_info, node_info=NodeTable().pop_node_info(node), next_node_info=NodeTable().pop_node_info(path[node_index+1]), previous_node_info=None, port=port).map()
-                
+                rule = rule + PostRestAPI(user_info=user_info, node_info=NodeTable().pop_node_info(node), next_node_info=NodeTable().pop_node_info(path[node_index+1]), previous_node_info=None, port=port).map()  
             elif node_index == len(path)-1:
                 rule = rule + PostRestAPI(user_info=user_info, node_info=NodeTable().pop_node_info(node), next_node_info=None, previous_node_info=NodeTable().pop_node_info(path[node_index-1]), port=None).mpp()
             else:
@@ -78,5 +66,4 @@ class SetRule:
                     port_list = [2, 1]
                 rule = rule + PostRestAPI(user_info=user_info, node_info=NodeTable().pop_node_info(node), next_node_info=NodeTable().pop_node_info(path[node_index+1]), previous_node_info=NodeTable().pop_node_info(path[node_index-1]), port=port_list).mp()
 
-        #print(rule)
-        self.post_request(user_ip=user_info['user_ip'], rule_list=rule)
+        self.add_rule(user_ip=user_info['user_ip'], rule_list=rule)
