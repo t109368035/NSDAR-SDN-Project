@@ -27,6 +27,7 @@ class Mainapp:
 
         getflow = Get_Live_Flow(mainwindow)
         getflow.start()
+        getflow.user_table_fresh.connect(mainwindow.refresh_table_userdata)
 
         getUser15 = Remote_capture(mainwindow, '15') # => capture user_data 
         getUser15.start()

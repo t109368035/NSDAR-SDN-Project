@@ -8,6 +8,7 @@ from PyQt5.QtWidgets import QDialog
 from DBControll.ConnectDatabase import ConnectDatabase
 from DBControll.UserTable import UserTable
 from DBControll.NodeTable import NodeTable
+from sdn_controller.SetRule import SetRule
 
 class MainWindow(QDialog):
     def __init__(self):
@@ -27,11 +28,20 @@ class MainWindow(QDialog):
         self.loaddata_table_userdata()
         self.loaddata_table_nodeinfo()
 
+    def refresh_table_userdata(self, userdata):
+        origin_user_list = UserTable().pop_all_user()
+        for i in range(len(origin_user_list)):
+            self.tableWidget_userdata.setItem(i, 0, None)
+            self.tableWidget_userdata.setItem(i, 1, None)
+        for user in userdata:
+            SetRule().delete_rule(action='single user', ip=user)
+        self.loaddata_table_userdata(user_data=None)
+
     def loaddata_table_userdata(self, user_data=None):
         user_list = UserTable().pop_all_user()
         if user_list:
-            self.tableWidget_userdata.setRowCount(len(user_list))
             row=0
+            self.tableWidget_userdata.setRowCount(len(user_list))
             sort_IP = sorted(user_list)#按照順序排序
             for IP in sort_IP:
                 user_info = UserTable().pop_user_info(IP)

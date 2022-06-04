@@ -1,6 +1,4 @@
 import re
-from telnetlib import STATUS
-from urllib import response
 from DBControll.ConnectDatabase import ConnectDatabase
 from DBControll.NodeTable import NodeTable
 from DBControll.UserTable import UserTable
@@ -18,13 +16,18 @@ class SetRule:
         response = requests.request("POST", url, headers=headers, data=rule)
         return str(response)
     
-    def delete_rule(self, action='all'):
+    def delete_rule(self, action='all', ip=None):
         if action == 'all':
             for ip in UserTable().pop_all_user():
                 for rule in RuleTable().pop_user_rule(ip):
                     print('Delete {}, {}'.format(self.check_status(self.post_request(rule, 'delete')), rule))
                 RuleTable().delete_user_rule(ip)
                 UserTable().delete_user(ip)
+        if action == 'single user':
+            for rule in RuleTable().pop_user_rule(ip):
+                print('Delete {}, {}'.format(self.check_status(self.post_request(rule, 'delete')), rule))
+            RuleTable().delete_user_rule(ip)
+            UserTable().delete_user(ip)
 
     def add_rule(self, user_ip, rule_list):
         for rule in rule_list:
@@ -52,9 +55,14 @@ class SetRule:
                     port = 2
                 else:
                     port = 1
-                rule = rule + PostRestAPI(user_info=user_info, node_info=NodeTable().pop_node_info(node), next_node_info=NodeTable().pop_node_info(path[node_index+1]), previous_node_info=None, port=port).map()  
+                rule = rule + PostRestAPI(user_info=user_info, node_info=NodeTable().pop_node_info(node),
+                                          next_node_info=NodeTable().pop_node_info(path[node_index+1]),
+                                          previous_node_info=None, port=port).map()  
             elif node_index == len(path)-1:
-                rule = rule + PostRestAPI(user_info=user_info, node_info=NodeTable().pop_node_info(node), next_node_info=None, previous_node_info=NodeTable().pop_node_info(path[node_index-1]), port=None).mpp()
+                rule = rule + PostRestAPI(user_info=user_info, node_info=NodeTable().pop_node_info(node),
+                                          next_node_info=None,
+                                          previous_node_info=NodeTable().pop_node_info(path[node_index-1]),
+                                          port=None).mpp()
             else:
                 port_list = ['"IN_PORT"', '"IN_PORT"']
                 c_node = int(re.search('\d+$',path[node_index]).group())
@@ -64,6 +72,9 @@ class SetRule:
                     port_list = [1, 2]
                 if abs(c_node - p_node) != 1 and abs(n_node - c_node) == 1:
                     port_list = [2, 1]
-                rule = rule + PostRestAPI(user_info=user_info, node_info=NodeTable().pop_node_info(node), next_node_info=NodeTable().pop_node_info(path[node_index+1]), previous_node_info=NodeTable().pop_node_info(path[node_index-1]), port=port_list).mp()
+                rule = rule + PostRestAPI(user_info=user_info, node_info=NodeTable().pop_node_info(node),
+                                          next_node_info=NodeTable().pop_node_info(path[node_index+1]),
+                                          previous_node_info=NodeTable().pop_node_info(path[node_index-1]),
+                                          port=port_list).mp()
 
         self.add_rule(user_ip=user_info['user_ip'], rule_list=rule)

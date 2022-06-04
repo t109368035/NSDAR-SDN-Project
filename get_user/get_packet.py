@@ -1,8 +1,6 @@
 import pyshark
 import re, time
-from threading import Thread
-from PyQt5.QtCore import QThread,pyqtSignal
-
+from PyQt5.QtCore import QThread, pyqtSignal
 from ssh.ssh_center import sshCenter
 from DBControll.ConnectDatabase import ConnectDatabase
 from DBControll.UserTable import UserTable
@@ -35,7 +33,9 @@ class Remote_capture(QThread):
     def add_user(self, ip, mac):
         if ip not in UserTable().pop_all_user() and ip != '10.10.2.1' and '10.10.2' in ip:
             vlan = re.search('\d+$',ip).group()
-            UserTable().insert_a_user(user_ip=ip, user_mac=mac, user_vlan=vlan, user_path=str(['map15','mp55','mpp98']).replace('\'','"'), user_type='innitial')
+            UserTable().insert_a_user(user_ip=ip, user_mac=mac, user_vlan=vlan,
+                                      user_path=str(['map15','mp55','mpp98']).replace('\'','"'),
+                                      user_type='innitial')
             self.map_user.emit('add user')
             SetRule().excute(ip_address=ip)
             try:
