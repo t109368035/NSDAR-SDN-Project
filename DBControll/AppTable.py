@@ -2,8 +2,10 @@ from DBControll.DBConnection import DBConnection
 
 
 class AppTable:
-    def insert_a_app(self, user_ip, app_name, app_ip):
-        command = "INSERT INTO app_table (user_ip, app_name, app_ip) VALUES  ('{}', '{}', '{}');".format(user_ip, app_name, app_ip)
+    def insert_a_app(self, stime, user_ip, user_dhcp, user_port, server_name, 
+                    server_ip, server_port, server_broadcast, protocol_L4, 
+                    protocol_L7, first_seen, last_seen, duration, bytes):
+        command = "INSERT INTO app_table (stime, user_ip, user_dhcp, user_port, server_name, server_ip, server_port, server_broadcast, protocol_L4, protocol_L7, first_seen, last_seen, duration, bytes) VALUES  ('{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}', '{}');".format(stime, user_ip, user_dhcp, user_port, server_name, server_ip, server_port, server_broadcast, protocol_L4, protocol_L7, first_seen, last_seen, duration, bytes)
             
         with DBConnection() as connection:
             cursor = connection.cursor()

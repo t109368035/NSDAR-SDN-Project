@@ -44,7 +44,10 @@ class MQTT(QThread):
         self.client.publish(topic, data)
     
     def dpid(self):
-        self.publish('info_request', 'dpidrequest')
+        if len(NodeTable().pop_all_node()) == 6:
+            self.dpid_timer.stop()
+        else:
+            self.publish('info_request', 'dpidrequest')
 
     def add_node(self, data):
         node_ID = list(data['dpidinfo'].keys())[0]

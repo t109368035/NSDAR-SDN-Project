@@ -23,7 +23,7 @@ class NodeTable:
             return {'node_name': record_from_db['node_name'], 'node_mac': record_from_db['node_mac'], 'node_dpid': record_from_db['node_dpid']}
         
     def pop_all_node(self):
-        command = "SELECT * FROM node_table"
+        command = "SELECT * FROM node_table;"
 
         with DBConnection() as connection:
             cursor = connection.cursor()

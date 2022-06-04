@@ -4,6 +4,7 @@ from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QApplication
 from workwidget.main_widget import MainWindow
 from get_user.get_packet import Remote_capture
+from get_user.get_flow import Get_Live_Flow
 from sdn_controller.excute_ryu import Excute_ryu
 from node_info.info_center import MQTT
 from sdn_controller.SetRule import SetRule
@@ -24,9 +25,12 @@ class Mainapp:
         start_ryu = Excute_ryu(mainwindow) # => excute ryu
         start_ryu.start()
 
-        getUser = Remote_capture(mainwindow) # => capture user_data 
-        getUser.start()
-        getUser.map15_user.connect(mainwindow.loaddata_table_userdata) # => throw user_data to ui
+        getflow = Get_Live_Flow(mainwindow)
+        getflow.start()
+
+        getUser15 = Remote_capture(mainwindow, '15') # => capture user_data 
+        getUser15.start()
+        getUser15.map_user.connect(mainwindow.loaddata_table_userdata) # => throw user_data to ui
 
         nodeinfo = MQTT(mainwindow) # => get infomation of node
         nodeinfo.start()
@@ -36,7 +40,7 @@ class Mainapp:
             sys.exit(app.exec_())
         except:
             SetRule().delete_rule(action='all')
-            AppTable().delete_all()
+            #AppTable().delete_all()
             print("Exiting")
             pass
 
