@@ -12,12 +12,24 @@ capture remote
 '''
 class Remote_capture(QThread):
     map_user = pyqtSignal(str)
+    getflow = pyqtSignal(str)
     def __init__(self,parent, node):
         super().__init__(parent)
         self.parent = parent
         self.sshcenter = sshCenter()
         self.node = node
         ConnectDatabase()
+
+        self.start_getflow_flag = False
+
+    def start_getflow(self):
+        if self.start_getflow_flag is False:
+            self.getflow.emit('start')
+            self.start_getflow_flag = True
+    
+    def stop_getflow(self, data):
+        print(data)
+        self.start_getflow_flag = False
 
     def run(self):
         self.get()
@@ -43,6 +55,7 @@ class Remote_capture(QThread):
                     self.sshcenter.send_command(ip=i, command='sudo arp -s {} {} -i ovsbr'.format(ip, mac))
             except Exception as e:
                 print('######get_packet->ssh######\n{}\n######get_packet->ssh######'.format(e))
+            self.start_getflow()
 
     def restart_get(self):
         time.sleep(3)

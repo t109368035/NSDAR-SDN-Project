@@ -25,17 +25,18 @@ class Mainapp:
         start_ryu = Excute_ryu(mainwindow) # => excute ryu
         start_ryu.start()
 
-        getflow = Get_Live_Flow(mainwindow)
-        getflow.start()
-        getflow.user_table_fresh.connect(mainwindow.refresh_table_userdata)
+        nodeinfo = MQTT(mainwindow) # => get infomation of node
+        nodeinfo.start()
+        nodeinfo.dpid_info.connect(mainwindow.loaddata_table_nodeinfo)
 
         getUser15 = Remote_capture(mainwindow, '15') # => capture user_data 
         getUser15.start()
         getUser15.map_user.connect(mainwindow.loaddata_table_userdata) # => throw user_data to ui
 
-        nodeinfo = MQTT(mainwindow) # => get infomation of node
-        nodeinfo.start()
-        nodeinfo.dpid_info.connect(mainwindow.loaddata_table_nodeinfo)
+        getflow15 = Get_Live_Flow(mainwindow)
+        getflow15.user_table_fresh.connect(mainwindow.refresh_table_userdata)
+        getUser15.getflow.connect(getflow15.serve)
+        getflow15.stop_getflow.connect(getUser15.stop_getflow)
         
         try:
             sys.exit(app.exec_())

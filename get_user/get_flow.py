@@ -1,5 +1,4 @@
 import subprocess, time
-from tabnanny import check
 from PyQt5.QtCore import QThread, pyqtSignal
 from DBControll.ConnectDatabase import ConnectDatabase
 from DBControll.AppTable import AppTable
@@ -10,10 +9,19 @@ from DBControll.UserTable import UserTable
 '''
 class Get_Live_Flow(QThread):
     user_table_fresh = pyqtSignal(list)
+    stop_getflow = pyqtSignal(str)
     def __init__(self, parent):
         super().__init__(parent)
         self.parent = parent
         ConnectDatabase()
+
+    def serve(self, data):
+        print(data)
+        self.start()
+
+    def stop_serve(self):
+        self.stop_getflow.emit('stop')
+        self.terminate()
     
     def run(self):
         self.store_user_flow()
@@ -37,6 +45,7 @@ class Get_Live_Flow(QThread):
             return None
 
     def store_user_flow(self):
+        time.sleep(20)
         store_time = time.ctime()
         user_list = UserTable().pop_all_user()
         flow_list = self.get_row_data()
@@ -53,10 +62,11 @@ class Get_Live_Flow(QThread):
                                                 flow['duration'], flow['bytes'])
                         check_user_list.add(user)
             self.delete_user(user_list, check_user_list)
-        self.restart_store()
+            self.restart_store()
+        else:
+            self.stop_serve()
     
     def restart_store(self):
-        time.sleep(20)
         self.store_user_flow()
 
     def delete_user(self, original_user_list, check_user_list):

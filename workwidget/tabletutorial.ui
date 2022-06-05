@@ -57,7 +57,7 @@ color: rgb(255, 151, 151);</string>
      <x>240</x>
      <y>70</y>
      <width>721</width>
-     <height>251</height>
+     <height>291</height>
     </rect>
    </property>
    <column>
@@ -81,7 +81,7 @@ color: rgb(255, 151, 151);</string>
    <property name="geometry">
     <rect>
      <x>240</x>
-     <y>340</y>
+     <y>400</y>
      <width>311</width>
      <height>41</height>
     </rect>
@@ -100,9 +100,9 @@ color: rgb(255, 151, 151);</string>
    <property name="geometry">
     <rect>
      <x>240</x>
-     <y>390</y>
+     <y>460</y>
      <width>721</width>
-     <height>201</height>
+     <height>331</height>
     </rect>
    </property>
    <column>
@@ -116,40 +116,6 @@ color: rgb(255, 151, 151);</string>
    <column>
     <property name="text">
      <string>Datapath ID</string>
-    </property>
-    <property name="textAlignment">
-     <set>AlignCenter</set>
-    </property>
-   </column>
-  </widget>
-  <widget class="QTableWidget" name="tableWidget_iwinfo">
-   <property name="geometry">
-    <rect>
-     <x>240</x>
-     <y>610</y>
-     <width>721</width>
-     <height>201</height>
-    </rect>
-   </property>
-   <column>
-    <property name="text">
-     <string>Node</string>
-    </property>
-    <property name="textAlignment">
-     <set>AlignCenter</set>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>TX Bitrate</string>
-    </property>
-    <property name="textAlignment">
-     <set>AlignCenter</set>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>RSSI</string>
     </property>
     <property name="textAlignment">
      <set>AlignCenter</set>
