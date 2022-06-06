@@ -1,3 +1,4 @@
+from tabnanny import check
 from PyQt5.uic import loadUi
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import QDialog
@@ -5,6 +6,7 @@ from DBControll.ConnectDatabase import ConnectDatabase
 from DBControll.UserTable import UserTable
 from DBControll.NodeTable import NodeTable
 from sdn_controller.SetRule import SetRule
+from get_user.get_flow import Get_Live_Flow
 
 class MainWindow(QDialog):
     def __init__(self):
@@ -20,12 +22,31 @@ class MainWindow(QDialog):
         self.loaddata_table_userdata()
         self.loaddata_table_nodeinfo()
 
+        self.start_getflow15_flag = False
+
     def refresh_table_userdata(self, userdata):
         for user in userdata:
             SetRule().delete_rule(action='single user', ip=user)
-        self.loaddata_table_userdata(user_data=None)
+        self.loaddata_table_userdata(condition=None)
 
-    def loaddata_table_userdata(self, user_data=None):
+    def check_start_getflow(self, condition):
+        if condition == 'add15' and self.start_getflow15_flag is False:
+            self.start_getflow15_flag = True
+            print('\n\n===========\nstart getflow15\n===========\n\n')
+            self.get15flow = Get_Live_Flow('15')
+            self.get15flow.start()
+            self.get15flow.user_table_fresh.connect(self.refresh_table_userdata)
+            self.get15flow.stop_getflow.connect(self.check_stop_getflow)
+    
+    def check_stop_getflow(self, condition):
+        print('\n\n===========\ncheck_stop_getflow->condition: {}\n===========\n\n'.format(condition))
+        if condition == 'map15 stop' and self.start_getflow15_flag is True:
+            print('\n\n===========\nstop getflow15\n===========\n\n')
+            self.start_getflow15_flag = False
+            self.get15flow.terminate() 
+
+    def loaddata_table_userdata(self, condition=None):
+        self.check_start_getflow(condition)
         user_list = UserTable().pop_all_user()
         if user_list:
             row=0

@@ -33,10 +33,10 @@ class Mainapp:
         getUser15.start()
         getUser15.map_user.connect(mainwindow.loaddata_table_userdata) # => throw user_data to ui
 
-        getflow15 = Get_Live_Flow(mainwindow)
-        getflow15.user_table_fresh.connect(mainwindow.refresh_table_userdata)
-        getUser15.getflow.connect(getflow15.serve)
-        getflow15.stop_getflow.connect(getUser15.stop_getflow)
+        #getflow15 = Get_Live_Flow(mainwindow)
+        #getflow15.user_table_fresh.connect(mainwindow.refresh_table_userdata)
+        #getUser15.getflow.connect(getflow15.serve)
+        #getflow15.stop_getflow.connect(getUser15.stop_getflow)
         
         try:
             sys.exit(app.exec_())

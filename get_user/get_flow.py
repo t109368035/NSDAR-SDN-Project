@@ -10,18 +10,10 @@ from DBControll.UserTable import UserTable
 class Get_Live_Flow(QThread):
     user_table_fresh = pyqtSignal(list)
     stop_getflow = pyqtSignal(str)
-    def __init__(self, parent):
-        super().__init__(parent)
-        self.parent = parent
+    def __init__(self, node):
+        super().__init__()
+        self.node = node
         ConnectDatabase()
-
-    def serve(self, data):
-        print(data)
-        self.start()
-
-    def stop_serve(self):
-        self.stop_getflow.emit('stop')
-        self.terminate()
     
     def run(self):
         self.store_user_flow()
@@ -37,7 +29,7 @@ class Get_Live_Flow(QThread):
     def get_row_data(self):        
         #####get live flow
         try:
-            cmd = 'curl -u admin:eelab210 "http://192.168.1.15:3000/lua/rest/v2/get/flow/active.lua?ifid=5"'
+            cmd = 'curl -u admin:eelab210 "http://192.168.1.{}:3000/lua/rest/v2/get/flow/active.lua?ifid=5"'.format(self.node)
             p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             raw_data, err = p.communicate()
             return self.row_data_proccess(raw_data)
@@ -63,8 +55,9 @@ class Get_Live_Flow(QThread):
                         check_user_list.add(user)
             self.delete_user(user_list, check_user_list)
             self.restart_store()
-        else:
-            self.stop_serve()
+        elif user_list is None:
+            print('\n\n===========\nget_flow->userlist is None\n===========\n\n')
+            self.stop_getflow.emit('map{} stop'.format(self.node))
     
     def restart_store(self):
         self.store_user_flow()
