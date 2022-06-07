@@ -29,7 +29,7 @@ class Get_Live_Flow(QThread):
     def get_row_data(self):        
         #####get live flow
         try:
-            cmd = 'curl -u admin:eelab210 "http://192.168.1.{}:3000/lua/rest/v2/get/flow/active.lua?ifid=5"'.format(self.node)
+            cmd = 'curl -u admin:eelab210 "http://192.168.1.1{}:3000/lua/rest/v2/get/flow/active.lua?ifid=2"'.format(self.node)
             p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             raw_data, err = p.communicate()
             return self.row_data_proccess(raw_data)
@@ -56,7 +56,6 @@ class Get_Live_Flow(QThread):
             self.delete_user(user_list, check_user_list)
             self.restart_store()
         elif user_list is None:
-            print('\n\n===========\nget_flow->userlist is None\n===========\n\n')
             self.stop_getflow.emit('map{} stop'.format(self.node))
     
     def restart_store(self):

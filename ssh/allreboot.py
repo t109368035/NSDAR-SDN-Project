@@ -9,6 +9,7 @@ class REBOOT():
             try:
                 #self.sshcenter.send_command(ip=i, command='sudo ovs-ofctl -O openflow13 del-flows ovsbr')
                 self.sshcenter.send_command(ip=i, command='sudo reboot')
+                #self.sshcenter.send_command(ip=i, command='sudo poweroff')
             except:
                 pass
 if __name__ == '__main__':
