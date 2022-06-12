@@ -12,6 +12,9 @@ MQTT_ALIVE = 60
 
 class MQTT(QThread):
     dpid_info = pyqtSignal(str)
+    start_getpacket15 = pyqtSignal(str)
+    node_fail = pyqtSignal(str)
+    restart_getpacket = pyqtSignal(str)
     def __init__(self,parent):
         super().__init__(parent)
         self.client = mqtt.Client()
@@ -22,6 +25,7 @@ class MQTT(QThread):
         self.dpid_timer.timeout.connect(self.dpid)
         self.dpid_timer.start(2000)
         self.etx_list = list()
+        self.getpacket_flag = False
         ConnectDatabase()
 
     def on_connect(self, client, userdata, flags, rc, properties=None):
@@ -34,6 +38,11 @@ class MQTT(QThread):
             self.add_node(data)
         elif data.get('chquality'):
             self.collect_ett(data)
+        elif data.get('fail'):
+            self.publish('info_request', 'ovs_restart_request')
+            self.node_fail.emit(data['fail'])
+        elif data.get('restart'):
+            self.restart_getpacket.emit(data['restart'])
 
     def subscribe(self):
         self.client.on_message = self.on_message
@@ -44,8 +53,9 @@ class MQTT(QThread):
         self.client.publish(topic, data)
     
     def dpid(self):
-        if len(NodeTable().pop_all_node()) == 6:
-            self.dpid_timer.stop()
+        if len(NodeTable().pop_all_node()) == 6 and self.getpacket_flag is False:
+            self.start_getpacket15.emit('start')
+            self.getpacket_flag = True
         else:
             self.publish('info_request', 'dpidrequest')
 

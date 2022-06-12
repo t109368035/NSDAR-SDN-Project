@@ -14,7 +14,7 @@ class SetRule:
         url = "http://localhost:8080/stats/flowentry/"+action
         headers = {'Content-Type': 'text/plain'}
         response = requests.request("POST", url, headers=headers, data=rule)
-        return str(response)
+        return response
     
     def delete_rule(self, action='all', ip=None):
         if action == 'all':

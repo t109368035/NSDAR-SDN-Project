@@ -19,22 +19,26 @@ class Get_Live_Flow(QThread):
         self.store_user_flow()
 
     def row_data_proccess(self, raw_data):
-        raw_data = raw_data.decode('utf-8')
-        raw_data = raw_data.replace('true','"true"')
-        raw_data = raw_data.replace('false','"false"')
-        dict_data = eval(raw_data)
-        all_live_flow = dict_data['rsp']['data']
-        return all_live_flow
+        try:
+            raw_data = raw_data.decode('utf-8')
+            raw_data = raw_data.replace('true','"true"')
+            raw_data = raw_data.replace('false','"false"')
+            dict_data = eval(raw_data)
+        except:
+            return None
+        if raw_data != '':
+            all_live_flow = dict_data['rsp']['data']
+            return all_live_flow
+        else:
+            return None
 
     def get_row_data(self):        
         #####get live flow
-        try:
-            cmd = 'curl -u admin:eelab210 "http://192.168.1.1{}:3000/lua/rest/v2/get/flow/active.lua?ifid=2"'.format(self.node)
-            p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            raw_data, err = p.communicate()
-            return self.row_data_proccess(raw_data)
-        except:
-            return None
+        cmd = 'curl -u admin:eelab210 "http://192.168.1.{}:3000/lua/rest/v2/get/flow/active.lua?ifid=1"'.format(self.node)
+        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        raw_data, err = p.communicate()
+        return self.row_data_proccess(raw_data)
+  
 
     def store_user_flow(self):
         time.sleep(20)
@@ -57,6 +61,8 @@ class Get_Live_Flow(QThread):
             self.restart_store()
         elif user_list is None:
             self.stop_getflow.emit('map{} stop'.format(self.node))
+        elif flow_list is None:
+            print('\n\n\n==============\nntop出問題了 : {}\n==============\n\n\n'.format(store_time))
     
     def restart_store(self):
         self.store_user_flow()

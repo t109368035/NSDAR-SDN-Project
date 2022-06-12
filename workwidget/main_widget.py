@@ -1,4 +1,4 @@
-from tabnanny import check
+import time
 from PyQt5.uic import loadUi
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import QDialog
@@ -7,6 +7,7 @@ from DBControll.UserTable import UserTable
 from DBControll.NodeTable import NodeTable
 from sdn_controller.SetRule import SetRule
 from get_user.get_flow import Get_Live_Flow
+from get_user.get_packet import Remote_capture
 
 class MainWindow(QDialog):
     def __init__(self):
@@ -19,17 +20,20 @@ class MainWindow(QDialog):
         ConnectDatabase()
         self.loaddata_table_userdata()
         self.loaddata_table_nodeinfo()
+        self.getpacket15_flag = False
         self.start_getflow15_flag = False
-
+#######
+#user info
+#######
     def refresh_table_userdata(self, userdata):
         for user in userdata:
             SetRule().delete_rule(action='single user', ip=user)
         self.loaddata_table_userdata(condition=None)
 
     def check_start_getflow(self, condition):
-        if condition == 'add15' and self.start_getflow15_flag is False:
+        if condition == 'map15 start' and self.start_getflow15_flag is False:
             self.start_getflow15_flag = True
-            print('\n\n===========\nstart getflow15\n===========\n\n')
+            print('\n\n===========\nstart getflow15 : {}\n===========\n\n'.format(time.ctime()))
             self.get15flow = Get_Live_Flow('15')
             self.get15flow.start()
             self.get15flow.user_table_fresh.connect(self.refresh_table_userdata)
@@ -37,6 +41,7 @@ class MainWindow(QDialog):
     
     def check_stop_getflow(self, condition):
         if condition == 'map15 stop' and self.start_getflow15_flag is True:
+            print('\n\n===========\n{} getflow15\n===========\n\n'.format(condition))
             self.start_getflow15_flag = False
             self.get15flow.terminate() 
 
@@ -59,6 +64,26 @@ class MainWindow(QDialog):
         else:
             self.tableWidget_userdata.setItem(0, 0, None)
             self.tableWidget_userdata.setItem(0, 1, None)
+
+#######
+#node info
+#######
+    def restart_getpacket(self, node):
+        if node == 'map15':
+            self.start_getpacket15()
+
+    def stop_getpacket(self, node):
+        if node == 'map15' and self.getpacket15_flag is True: 
+            self.getpacket15.terminate()    
+            self.getpacket15_flag = False
+            print('\n\n===========\nstop getpacket15 : {}\n===========\n\n'.format(time.ctime()))
+
+    def start_getpacket15(self, condition=None):
+        self.getpacket15_flag = True
+        print('\n\n===========\nstart getpacket15 : {}\n===========\n\n'.format(time.ctime()))
+        self.getpacket15 = Remote_capture('15')
+        self.getpacket15.start()
+        self.getpacket15.map_user.connect(self.loaddata_table_userdata)
 
     def loaddata_table_nodeinfo(self, dpid_data=None):
         node_list = NodeTable().pop_all_node()
