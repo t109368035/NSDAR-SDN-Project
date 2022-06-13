@@ -30,7 +30,7 @@ necessary_table_to_create = {
             (
                 user_ip VARCHAR(255),
                 user_rule VARCHAR(255),
-                status VARCHAR(255)
+                dpid VARCHAR(255)
             );
         """,
     

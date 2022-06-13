@@ -27,8 +27,6 @@ class Mainapp:
         nodeinfo.start()
         nodeinfo.dpid_info.connect(mainwindow.loaddata_table_nodeinfo)
         nodeinfo.start_getpacket15.connect(mainwindow.start_getpacket15)
-        nodeinfo.node_fail.connect(mainwindow.stop_getpacket)
-        nodeinfo.restart_getpacket.connect(mainwindow.restart_getpacket)
         #getUser15 = Remote_capture(mainwindow, '15') # => capture user_data 
         #getUser15.start()
         #getUser15.map_user.connect(mainwindow.loaddata_table_userdata) # => throw user_data to ui

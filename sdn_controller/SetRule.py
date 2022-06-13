@@ -1,4 +1,4 @@
-import re
+import re, time
 from DBControll.ConnectDatabase import ConnectDatabase
 from DBControll.NodeTable import NodeTable
 from DBControll.UserTable import UserTable
@@ -8,32 +8,46 @@ import requests
 
 class SetRule:
     def __init__(self):
+        self.rule = None
+        self.action = None
         ConnectDatabase()
 
     def post_request(self, rule,  action):
         url = "http://localhost:8080/stats/flowentry/"+action
         headers = {'Content-Type': 'text/plain'}
         response = requests.request("POST", url, headers=headers, data=rule)
-        return response
+        if '200' not in str(response):
+            time.sleep(0.3)
+            self.post_request(self.rule, self.action)
+
     
     def delete_rule(self, action='all', ip=None):
+        self.action = 'delete'
         if action == 'all':
             for ip in UserTable().pop_all_user():
                 for rule in RuleTable().pop_user_rule(ip):
-                    print('Delete {}, {}'.format(self.check_status(self.post_request(rule, 'delete')), rule))
+                    self.rule = rule
+                    self.post_request(rule, 'delete')
+                    #print('Delete {}, {}'.format(self.check_status(self.post_request(rule, 'delete')), rule))
                 RuleTable().delete_user_rule(ip)
                 UserTable().delete_user(ip)
         if action == 'single user':
             for rule in RuleTable().pop_user_rule(ip):
-                print('Delete {}, {}'.format(self.check_status(self.post_request(rule, 'delete')), rule))
+                self.rule = rule
+                self.post_request(rule, 'delete')
+                #print('Delete {}, {}'.format(self.check_status(self.post_request(rule, 'delete')), rule))
             RuleTable().delete_user_rule(ip)
             UserTable().delete_user(ip)
 
-    def add_rule(self, user_ip, rule_list):
+    def add_rule(self, user_ip=None, rule_list=None, re_add=False):
+        self.action = 'add'
         for rule in rule_list:
-            status = self.check_status(self.post_request(rule, 'add'))
-            RuleTable().insert_a_rule(user_ip, rule, status)
-    
+            self.rule = rule
+            self.post_request(rule, 'add')
+            if not re_add:
+                dpid = re.search('(?<=:)\d+', rule).group()
+                RuleTable().insert_a_rule(user_ip, rule, dpid)
+
     def check_status(self, status):
         if '200' in status:
             return 'Success'

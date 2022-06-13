@@ -10,6 +10,7 @@ from DBControll.UserTable import UserTable
 class Get_Live_Flow(QThread):
     user_table_fresh = pyqtSignal(list)
     stop_getflow = pyqtSignal(str)
+    node_fail = pyqtSignal(str)
     def __init__(self, node):
         super().__init__()
         self.node = node
@@ -58,12 +59,14 @@ class Get_Live_Flow(QThread):
                                                 flow['duration'], flow['bytes'])
                         check_user_list.add(user)
             self.delete_user(user_list, check_user_list)
-            self.restart_store()
         elif user_list is None:
             self.stop_getflow.emit('map{} stop'.format(self.node))
         elif flow_list is None:
             print('\n\n\n==============\nntop出問題了 : {}\n==============\n\n\n'.format(store_time))
-    
+            self.stop_getflow.emit('map{} stop'.format(self.node))
+            self.node_fail.emit('map{}'.format(self.node))
+        self.restart_store()
+
     def restart_store(self):
         self.store_user_flow()
 
