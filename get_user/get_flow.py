@@ -47,9 +47,10 @@ class Get_Live_Flow(QThread):
         #time.sleep(20)
         store_time = time.ctime()
         user_list = UserTable().pop_all_user()
+        print('user list in dataset: {}'.format(user_list))
         flow_list = self.get_row_data()
         check_user_list = set()
-        if user_list is not None and flow_list is not None:
+        if user_list and flow_list:
             for user in user_list:
                 for flow in flow_list:
                     client_ip = flow['client']['ip']
@@ -60,10 +61,13 @@ class Get_Live_Flow(QThread):
                                                 flow['protocol']['l7'], flow['first_seen'], flow['last_seen'],
                                                 flow['duration'], flow['bytes'])
                         check_user_list.add(user)
+            print('user list in ntop: {}'.format(check_user_list))
             self.delete_user(user_list, check_user_list)
-        elif user_list is None:
+        elif not user_list and flow_list:
+            print('user list is none')
+            self.ftimer.stop()
             self.stop_getflow.emit('map{} stop'.format(self.node))
-        elif flow_list is None:
+        elif user_list and not flow_list:
             print('\n\n\n==============\nntop出問題了 : {}\n==============\n\n\n'.format(store_time))
             self.ftimer.stop()
             self.stop_getflow.emit('map{} stop'.format(self.node))
