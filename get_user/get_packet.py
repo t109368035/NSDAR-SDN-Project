@@ -24,13 +24,10 @@ class Remote_capture(QThread):
     def get(self):
         try:
             capture = pyshark.RemoteCapture('192.168.1.{}'.format(self.node), 'eth0', bpf_filter='ip src host 10.10.2')
-            capture.sniff(packet_count=60)
-            capture.close()
-            for packet in capture.sniff_continuously(packet_count=60): #逐一取出擷取到的封包並且存到database
+            for packet in capture: #逐一取出擷取到的封包並且存到database
                 self.add_user(packet['IP'].src, packet['ETH'].src)
-            self.restart_get()
         except:
-            pass
+            self.get()
 
     def add_user(self, ip, mac):
         if ip not in UserTable().pop_all_user() and ip != '10.10.2.1' and '10.10.2' in ip:
@@ -40,15 +37,15 @@ class Remote_capture(QThread):
                                       user_type='innitial')
             SetRule().excute(ip_address=ip)
             try:
-                for i in ['192.168.1.98']:#, '192.168.1.99']:
+                for i in ['192.168.1.98', '192.168.1.99']:
                     self.sshcenter.send_command(ip=i, command='sudo arp -s {} {} -i ovsbr'.format(ip, mac))
             except Exception as e:
                 print('######get_packet->ssh######\n{}\n######get_packet->ssh######'.format(e))
             self.map_user.emit('map{} start'.format(self.node))
 
-    def restart_get(self):
-        time.sleep(3)
-        self.get()
+    #def restart_get(self):
+    #    time.sleep(3)
+    #    self.get()
         
 if __name__ == '__main__':
     RemoteCapture = Remote_capture()
