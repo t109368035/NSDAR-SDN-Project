@@ -3,7 +3,7 @@ from DBControll.ConnectDatabase import ConnectDatabase
 from DBControll.NodeTable import NodeTable
 import time
 
-class PowerControl():
+class PowerControll():
     def __init__(self):
         self.sshcenter = sshCenter()
         ConnectDatabase()

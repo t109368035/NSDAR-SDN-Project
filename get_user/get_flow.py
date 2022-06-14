@@ -1,5 +1,5 @@
 import subprocess, time
-from PyQt5.QtCore import QThread, pyqtSignal
+from PyQt5.QtCore import QThread, pyqtSignal, QTimer
 from DBControll.ConnectDatabase import ConnectDatabase
 from DBControll.AppTable import AppTable
 from DBControll.UserTable import UserTable
@@ -15,9 +15,12 @@ class Get_Live_Flow(QThread):
         super().__init__()
         self.node = node
         ConnectDatabase()
+        self.ftimer = QTimer(self)
+        self.ftimer.timeout.connect(self.store_user_flow)
+        self.ftimer.start(20000)
     
     def run(self):
-        self.store_user_flow()
+        print('\n\n===========\nstart getflow{} : {}\n===========\n\n'.format(self.node, time.ctime()))
 
     def row_data_proccess(self, raw_data):
         try:
@@ -40,9 +43,8 @@ class Get_Live_Flow(QThread):
         raw_data, err = p.communicate()
         return self.row_data_proccess(raw_data)
   
-
     def store_user_flow(self):
-        time.sleep(20)
+        #time.sleep(20)
         store_time = time.ctime()
         user_list = UserTable().pop_all_user()
         flow_list = self.get_row_data()
@@ -63,12 +65,9 @@ class Get_Live_Flow(QThread):
             self.stop_getflow.emit('map{} stop'.format(self.node))
         elif flow_list is None:
             print('\n\n\n==============\nntop出問題了 : {}\n==============\n\n\n'.format(store_time))
+            self.ftimer.stop()
             self.stop_getflow.emit('map{} stop'.format(self.node))
             self.node_fail.emit('map{}'.format(self.node))
-        self.restart_store()
-
-    def restart_store(self):
-        self.store_user_flow()
 
     def delete_user(self, original_user_list, check_user_list):
         delete_user = list()

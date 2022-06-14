@@ -19,7 +19,6 @@ class MQTT(QThread):
         self.client = mqtt.Client()
         self.client.connect(MQTT_BROKER, MQTT_PORT, MQTT_ALIVE)
         self.client.on_connect = self.on_connect
-        self.dpid_dict = dict()
         self.dpid_timer = QTimer(self)
         self.dpid_timer.timeout.connect(self.dpid)
         self.dpid_timer.start(2000)

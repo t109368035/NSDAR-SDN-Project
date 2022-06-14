@@ -9,7 +9,7 @@ from DBControll.NodeTable import NodeTable
 from sdn_controller.SetRule import SetRule
 from get_user.get_flow import Get_Live_Flow
 from get_user.get_packet import Remote_capture
-from ssh.power_control import PowerControl
+from ssh.power_controll import PowerControll
 
 class MainWindow(QDialog):
     def __init__(self):
@@ -35,7 +35,7 @@ class MainWindow(QDialog):
     def check_start_getflow(self, condition):
         if condition == 'map15 start' and self.start_getflow15_flag is False:
             self.start_getflow15_flag = True
-            print('\n\n===========\nstart getflow15 : {}\n===========\n\n'.format(time.ctime()))
+            #print('\n\n===========\nstart getflow15 : {}\n===========\n\n'.format(time.ctime()))
             self.get15flow = Get_Live_Flow('15')
             self.get15flow.start()
             self.get15flow.user_table_fresh.connect(self.refresh_table_userdata)
@@ -72,7 +72,7 @@ class MainWindow(QDialog):
 #node info
 #######
     def stop_getpacket(self, node):
-        PowerControl().node_reboot(node)
+        PowerControll().node_reboot(node)
         NodeTable().delete_user(node)
         if node == 'map15' and self.getpacket15_flag is True: 
             self.getpacket15.terminate()    
@@ -81,8 +81,9 @@ class MainWindow(QDialog):
 
     def start_getpacket15(self, condition=None):
         dpid_rule = RuleTable().pop_dpid_rule(NodeTable().pop_node_info('map15')['node_dpid'])
-        if dpid_rule:
+        if dpid_rule and not self.start_getflow15_flag:
             SetRule().add_rule(rule_list=dpid_rule, re_add=True)
+            self.check_start_getflow('map15 start')
         self.getpacket15_flag = True
         print('\n\n===========\nstart getpacket15 : {}\n===========\n\n'.format(time.ctime()))
         self.getpacket15 = Remote_capture('15')
