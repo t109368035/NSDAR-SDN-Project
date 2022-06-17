@@ -13,6 +13,7 @@ MQTT_ALIVE = 60
 class MQTT(QThread):
     dpid_info = pyqtSignal(str)
     start_getpacket15 = pyqtSignal(str)
+    start_getpacket05 = pyqtSignal(str)
     #node_fail = pyqtSignal(str)
     def __init__(self,parent):
         super().__init__(parent)
@@ -50,10 +51,11 @@ class MQTT(QThread):
         self.client.publish(topic, data)
 
     def dpid(self):
-        if len(NodeTable().pop_all_node()) == 6 and self.getpacket_flag is False:
+        if len(NodeTable().pop_all_node()) == 12 and self.getpacket_flag is False:
             self.start_getpacket15.emit('start')
+            self.start_getpacket05.emit('start')
             self.getpacket_flag = True
-        elif len(NodeTable().pop_all_node()) < 6 and self.getpacket_flag is True:
+        elif len(NodeTable().pop_all_node()) < 12 and self.getpacket_flag is True:
             self.getpacket_flag = False
         else:
             self.publish('info_request', 'dpidrequest')

@@ -25,6 +25,7 @@ class Mainapp:
         nodeinfo.start()
         nodeinfo.dpid_info.connect(mainwindow.loaddata_table_nodeinfo)
         nodeinfo.start_getpacket15.connect(mainwindow.start_getpacket15)
+        nodeinfo.start_getpacket05.connect(mainwindow.start_getpacket05)
         
         try:
             sys.exit(app.exec_())

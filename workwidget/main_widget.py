@@ -23,7 +23,9 @@ class MainWindow(QDialog):
         self.loaddata_table_userdata()
         self.loaddata_table_nodeinfo()
         self.getpacket15_flag = False
+        self.getpacket05_flag = False
         self.start_getflow15_flag = False
+        self.start_getflow05_flag = False
 #######
 #user info
 #######
@@ -41,12 +43,24 @@ class MainWindow(QDialog):
             self.get15flow.user_table_fresh.connect(self.refresh_table_userdata)
             self.get15flow.stop_getflow.connect(self.check_stop_getflow)
             self.get15flow.node_fail.connect(self.stop_getpacket)
-    
+        elif condition == 'map5 start' and self.start_getflow05_flag is False:
+            self.start_getflow05_flag = True
+            #print('\n\n===========\nstart getflow15 : {}\n===========\n\n'.format(time.ctime()))
+            self.get05flow = Get_Live_Flow('5')
+            self.get05flow.start()
+            self.get05flow.user_table_fresh.connect(self.refresh_table_userdata)
+            self.get05flow.stop_getflow.connect(self.check_stop_getflow)
+            self.get05flow.node_fail.connect(self.stop_getpacket)
+
     def check_stop_getflow(self, condition):
         if condition == 'map15 stop' and self.start_getflow15_flag is True:
             print('\n\n===========\n{} getflow15\n===========\n\n'.format(condition))
             self.start_getflow15_flag = False
-            self.get15flow.terminate() 
+            self.get15flow.terminate()
+        elif condition == 'map5 stop' and self.start_getflow05_flag is True:
+            print('\n\n===========\n{} getflow05\n===========\n\n'.format(condition))
+            self.start_getflow05_flag = False
+            self.get05flow.terminate() 
 
     def loaddata_table_userdata(self, condition=None):
         self.check_start_getflow(condition)
@@ -78,6 +92,10 @@ class MainWindow(QDialog):
             self.getpacket15.terminate()    
             self.getpacket15_flag = False
             print('\n\n===========\nstop getpacket15 : {}\n===========\n\n'.format(time.ctime()))
+        elif node == 'map5' and self.getpacket05_flag is True: 
+            self.getpacket05.terminate()    
+            self.getpacket05_flag = False
+            print('\n\n===========\nstop getpacket05 : {}\n===========\n\n'.format(time.ctime()))
 
     def start_getpacket15(self, condition=None):
         dpid_rule = RuleTable().pop_dpid_rule(NodeTable().pop_node_info('map15')['node_dpid'])
@@ -89,6 +107,17 @@ class MainWindow(QDialog):
         self.getpacket15 = Remote_capture('15')
         self.getpacket15.start()
         self.getpacket15.map_user.connect(self.loaddata_table_userdata)
+
+    def start_getpacket05(self, condition=None):
+        dpid_rule = RuleTable().pop_dpid_rule(NodeTable().pop_node_info('map5')['node_dpid'])
+        if dpid_rule and not self.start_getflow05_flag:
+            SetRule().add_rule(rule_list=dpid_rule, re_add=True)
+            self.check_start_getflow('map5 start')
+        self.getpacket05_flag = True
+        print('\n\n===========\nstart getpacket05 : {}\n===========\n\n'.format(time.ctime()))
+        self.getpacket05 = Remote_capture('5')
+        self.getpacket05.start()
+        self.getpacket05.map_user.connect(self.loaddata_table_userdata)
 
     def loaddata_table_nodeinfo(self, dpid_data=None):
         node_list = NodeTable().pop_all_node()

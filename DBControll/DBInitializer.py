@@ -20,7 +20,8 @@ necessary_table_to_create = {
                 user_mac VARCHAR(255),
                 user_vlan VARCHAR(255),
                 user_path VARCHAR(255),
-                user_type VARCHAR(255)
+                user_type VARCHAR(255),
+                user_ap VARCHAR(255)
             );
         """,
 

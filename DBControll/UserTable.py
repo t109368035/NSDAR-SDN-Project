@@ -1,8 +1,8 @@
 from DBControll.DBConnection import DBConnection
 
 class UserTable:
-    def insert_a_user(self, user_vlan,user_ip, user_mac, user_path, user_type):
-        command = "INSERT INTO user_table (user_vlan, user_ip, user_mac, user_path, user_type) VALUES  ('{}', '{}', '{}', '{}', '{}');".format(user_vlan, user_ip, user_mac, user_path, user_type)
+    def insert_a_user(self, user_vlan,user_ip, user_mac, user_path, user_type, user_ap):
+        command = "INSERT INTO user_table (user_vlan, user_ip, user_mac, user_path, user_type, user_ap) VALUES  ('{}', '{}', '{}', '{}', '{}', '{}');".format(user_vlan, user_ip, user_mac, user_path, user_type, user_ap)
             
         with DBConnection() as connection:
             cursor = connection.cursor()
@@ -11,6 +11,16 @@ class UserTable:
 
     def pop_all_user(self):
         command = "SELECT * FROM user_table"
+
+        with DBConnection() as connection:
+            cursor = connection.cursor()
+            cursor.execute(command)
+            record_from_db = cursor.fetchall()
+
+        return [row['user_ip'] for row in record_from_db]
+    
+    def pop_AP_user(self, user_ap):
+        command = "SELECT * FROM user_table WHERE user_ap='{}';".format(user_ap)
 
         with DBConnection() as connection:
             cursor = connection.cursor()
