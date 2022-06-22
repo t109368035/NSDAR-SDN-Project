@@ -34,7 +34,7 @@ class Remote_capture(QThread):
             vlan = re.search('\d+$',ip).group()
             if int(vlan) <= 150:
                 AP = 'map15'
-                path = ['map15','mp55','mpp98']
+                path = ['map15','map16','mp46','mpp99']
             else:
                 AP = 'map5'
                 path = ['map5','mp45','mpp88']

@@ -2,7 +2,7 @@
 # https://dev.to/mariamxl/dijkstras-algorithm-in-python-algorithms-for-beginners-dkc
 
 from collections import deque, namedtuple
-
+import re
 
 # we'll use infinity as a default distance to nodes.
 inf = float('inf')
@@ -19,8 +19,9 @@ class Graph:
         wrong_edges = [i for i in edges if len(i) not in [2, 3]]
         if wrong_edges:
             raise ValueError('Wrong edges data: {}'.format(wrong_edges))
-        #self.static_edges = [('map15', 'map16', 0), ('mpp55', 'mpp56', 0), ('mp98', 'out', 0), ('mp99', 'out', 0)]                    
-        #print(edges+self.static_edges)
+        self.static_edges = [('map15', 'map16', 0), ('mp55', 'mp56', 0), ('mpp98', 'out', 0),
+                             ('mpp99', 'out', 0), ('map5', 'map6', 0), ('mp45', 'mp46', 0),
+                             ('mpp88', 'out', 0), ('mpp89', 'out', 0)]
         self.edges = [make_edge(*edge) for edge in edges]
         #print(self.edges)
 
@@ -98,5 +99,3 @@ class Graph:
 #    ("a", "b", 7),  ("a", "c", 9),  ("a", "f", 14), ("b", "c", 10),
 #    ("b", "d", 15), ("c", "d", 11), ("c", "f", 2),  ("d", "e", 6),
 #    ("e", "f", 9)])
-#graph = Graph([('map16', 'mpp56', 0.009225824873499296), ('map15', 'mpp55', 0.0006968659272159045), ('mpp55', 'mp98', 0.00048788502931310643), ('mpp56', 'mp99', 0.004077769864779311), ('map15', 'map16', 0), ('mpp55', 'mpp56', 0), ('mp98', 'out', 0), ('mp99', 'out', 0)])
-#print(list(graph.dijkstra("map15", "mp99")))

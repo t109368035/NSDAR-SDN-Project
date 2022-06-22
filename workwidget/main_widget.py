@@ -1,4 +1,4 @@
-import time, json
+import time
 from PyQt5.uic import loadUi
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import QDialog
@@ -7,14 +7,17 @@ from DBControll.RuleTable import RuleTable
 from DBControll.UserTable import UserTable
 from DBControll.NodeTable import NodeTable
 from sdn_controller.SetRule import SetRule
+from node_info.info_center import NodeINFO
 from get_user.get_flow import Get_Live_Flow
 from get_user.get_packet import Remote_capture
 from ssh.power_controll import PowerControll
-from workwidget.iperf_test import iperf_test_request
 
 class MainWindow(QDialog):
     def __init__(self):
         super(MainWindow, self).__init__()
+        ##database
+        ConnectDatabase()
+
         ##widget
         loadUi("workwidget\\tabletutorial.ui",self)
         self.tableWidget_userdata.setColumnWidth(0,350)
@@ -26,22 +29,25 @@ class MainWindow(QDialog):
         self.loaddata_table_userdata()
         self.loaddata_table_nodeinfo()
 
-        ##database
-        ConnectDatabase()
-        
+        ##start node_info thread
+        self.nodeinfo = NodeINFO()
+        self.nodeinfo.start()
+        self.nodeinfo.dpid_info.connect(self.loaddata_table_nodeinfo)
+        self.nodeinfo.start_getpacket15.connect(self.start_getpacket15)
+        self.nodeinfo.start_getpacket05.connect(self.start_getpacket05)
+        self.nodeinfo.enable_ETT.connect(self.enable_ETT_button)
+
         ##start flag of get_user
         self.getpacket15_flag = False
         self.getpacket05_flag = False
         self.start_getflow15_flag = False
         self.start_getflow05_flag = False
 
-        
 #######
 #collect ETT
 #######
     def collect_ETT(self):
-        print("start collect_ETT")
-        print(iperf_test_request())
+        print(self.nodeinfo.iperf_test_request())
 
     def enable_ETT_button(self, data):
         self.ETT_Button.setEnabled(True)

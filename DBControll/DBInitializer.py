@@ -2,6 +2,17 @@ from DBControll.DBConnection import DBConnection
 
 
 necessary_table_to_create = {
+    "link_table":
+        """
+            CREATE TABLE link_table
+            (
+                start_node VARCHAR(255),
+                end_node VARCHAR(255),
+                bandwidth FLOAT,
+                ETX FLOAT
+            );
+        """,
+
     "node_table":
         """
             CREATE TABLE node_table
