@@ -1,4 +1,4 @@
-import time
+import time, json
 from PyQt5.uic import loadUi
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import QDialog
@@ -10,22 +10,42 @@ from sdn_controller.SetRule import SetRule
 from get_user.get_flow import Get_Live_Flow
 from get_user.get_packet import Remote_capture
 from ssh.power_controll import PowerControll
+from workwidget.iperf_test import iperf_test_request
 
 class MainWindow(QDialog):
     def __init__(self):
         super(MainWindow, self).__init__()
+        ##widget
         loadUi("workwidget\\tabletutorial.ui",self)
         self.tableWidget_userdata.setColumnWidth(0,350)
         self.tableWidget_userdata.setColumnWidth(1,350)
         self.tableWidget_nodeinfo.setColumnWidth(0,350)
         self.tableWidget_nodeinfo.setColumnWidth(1,350)
-        ConnectDatabase()
+        self.ETT_Button.setEnabled(False)
+        self.ETT_Button.clicked.connect(self.collect_ETT)
         self.loaddata_table_userdata()
         self.loaddata_table_nodeinfo()
+
+        ##database
+        ConnectDatabase()
+        
+        ##start flag of get_user
         self.getpacket15_flag = False
         self.getpacket05_flag = False
         self.start_getflow15_flag = False
         self.start_getflow05_flag = False
+
+        
+#######
+#collect ETT
+#######
+    def collect_ETT(self):
+        print("start collect_ETT")
+        print(iperf_test_request())
+
+    def enable_ETT_button(self, data):
+        self.ETT_Button.setEnabled(True)
+
 #######
 #user info
 #######
@@ -87,7 +107,7 @@ class MainWindow(QDialog):
 #######
     def stop_getpacket(self, node):
         PowerControll().node_reboot(node)
-        NodeTable().delete_user(node)
+        NodeTable().delete_node(node)
         if node == 'map15' and self.getpacket15_flag is True: 
             self.getpacket15.terminate()    
             self.getpacket15_flag = False

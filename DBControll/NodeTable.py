@@ -32,7 +32,7 @@ class NodeTable:
 
         return [row['node_name'] for row in record_from_db]
     
-    def delete_user(self, node_name):
+    def delete_node(self, node_name):
         command = "DELETE FROM node_table WHERE node_name='{}';".format(node_name)
 
         with DBConnection() as connection:
@@ -40,6 +40,13 @@ class NodeTable:
             cursor.execute(command)
             connection.commit()
 
+    def delete_all(self):
+        command = "DELETE FROM node_table;"
+
+        with DBConnection() as connection:
+            cursor = connection.cursor()
+            cursor.execute(command)
+            connection.commit()
     '''
     def select_a_patient(self, bed_id):
             command = "SELECT * FROM patient_list WHERE bed_id='{}'".format(bed_id)

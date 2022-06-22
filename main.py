@@ -1,6 +1,7 @@
 import sys
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QApplication
+from DBControll.NodeTable import NodeTable
 from workwidget.main_widget import MainWindow
 from sdn_controller.excute_ryu import Excute_ryu
 from node_info.info_center import MQTT
@@ -26,11 +27,13 @@ class Mainapp:
         nodeinfo.dpid_info.connect(mainwindow.loaddata_table_nodeinfo)
         nodeinfo.start_getpacket15.connect(mainwindow.start_getpacket15)
         nodeinfo.start_getpacket05.connect(mainwindow.start_getpacket05)
+        nodeinfo.enable_ETT.connect(mainwindow.enable_ETT_button)
         
         try:
             sys.exit(app.exec_())
         except:
             SetRule().delete_rule(action='all')
+            NodeTable().delete_all()
             #AppTable().delete_all()
             print("Exiting")
 

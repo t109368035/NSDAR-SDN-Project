@@ -14,6 +14,7 @@ class MQTT(QThread):
     dpid_info = pyqtSignal(str)
     start_getpacket15 = pyqtSignal(str)
     start_getpacket05 = pyqtSignal(str)
+    enable_ETT = pyqtSignal(str)
     #node_fail = pyqtSignal(str)
     def __init__(self,parent):
         super().__init__(parent)
@@ -36,6 +37,7 @@ class MQTT(QThread):
         if data.get('dpidinfo'):
             self.add_node(data)
         elif data.get('chquality'):
+            print(data)
             self.collect_ett(data)
         #elif data.get('fail'):
         #    self.node_fail.emit(data['fail'])
@@ -52,9 +54,11 @@ class MQTT(QThread):
 
     def dpid(self):
         if len(NodeTable().pop_all_node()) == 12 and self.getpacket_flag is False:
+            self.getpacket_flag = True
+            self.enable_ETT.emit('add node')
             self.start_getpacket15.emit('start')
             self.start_getpacket05.emit('start')
-            self.getpacket_flag = True
+            self.dpid_timer.stop()
         elif len(NodeTable().pop_all_node()) < 12 and self.getpacket_flag is True:
             self.getpacket_flag = False
         else:
@@ -67,22 +71,18 @@ class MQTT(QThread):
             node_info = data['dpidinfo'][node_ID]
             NodeTable().insert_node(node_name=node_ID, node_dpid=node_info['dpid'], node_mac=node_info['mac'])
             self.dpid_info.emit('add node')
-        
-    def iperf_test_request(self, stage):
-        if stage ==  1:
-            self.publish('info_request', 'test1')
-        elif stage ==2:
-            self.publish('info_request', 'test2')
 
     def collect_ett(self, data):
         packetsize = 12112 #bits
         bandwidth = data['chquality']['bandwidth']
+        if not bandwidth or bandwidth == 0.0:
+            bandwidth = 1000
         etx = data['chquality']['etx']
         ett = data['chquality']['start'], data['chquality']['end'],  etx*(packetsize/bandwidth)
         print(type(ett))
         print(ett)
-        #self.etx_list.append(ett)
-        #if len(self.etx_list) == 4:
+        self.etx_list.append(ett)
+        #if len(self.etx_list) == :
         #    path = Graph(self.etx_list)
         #    print(list(path.dijkstra("map15", "out")))
 

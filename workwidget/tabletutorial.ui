@@ -122,6 +122,19 @@ color: rgb(255, 151, 151);</string>
     </property>
    </column>
   </widget>
+  <widget class="QPushButton" name="ETT_Button">
+   <property name="geometry">
+    <rect>
+     <x>990</x>
+     <y>770</y>
+     <width>111</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>COLLECT ETT</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>
