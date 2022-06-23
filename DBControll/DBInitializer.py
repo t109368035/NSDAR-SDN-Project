@@ -2,6 +2,16 @@ from DBControll.DBConnection import DBConnection
 
 
 necessary_table_to_create = {
+    "path_table":
+        """
+            CREATE TABLE path_table
+            (
+                AP VARCHAR(255),
+                app_type VARCHAR(255),
+                path VARCHAR(255)
+            );
+        """,
+
     "link_table":
         """
             CREATE TABLE link_table

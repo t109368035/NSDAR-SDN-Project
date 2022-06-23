@@ -5,6 +5,7 @@ from PyQt5.QtCore import QThread, pyqtSignal, QTimer
 from DBControll.ConnectDatabase import ConnectDatabase
 from DBControll.NodeTable import NodeTable
 from DBControll.LinkTable import LinkTable
+from DBControll.PathTable import PathTable
 from path_calculate.dikstra_graph import Graph
 
 MQTT_BROKER = '192.168.1.143'
@@ -73,7 +74,7 @@ class NodeINFO(QThread):
     def add_link(self, data):
         self.link_count+=1
         LinkTable().insert_link(start_node=data['start'], end_node=data['end'],
-                                bandwidth=data['bandwidth'], ETX=data['etx'])
+                                bandwidth=data['bandwidth'], ETX=data['etx'])#bandwidth需要除役以2嗎?因為會掉包
         if self.link_count == 12:
             self.get_APP_path()
             self.get_normal_path()
@@ -81,9 +82,11 @@ class NodeINFO(QThread):
 
     def get_normal_path(self):
         for AP in ['map15', 'map5']:
+            btype = 'normal'
             graph = Graph(LinkTable().pop_ETT())
             path = graph.dijkstra(AP, 'out')
             print('start from {}, type is {}\n{}\n\n'.format(AP, 'normal', path))
+            PathTable().insert_path(AP=AP.replace('\'','"'), app_type=btype.replace('\'','"'), path=str(path).replace('\'','"'))
 
     def get_APP_path(self):
         for btype in ['Mission', 'Mobile', 'Massive']:
@@ -92,7 +95,8 @@ class NodeINFO(QThread):
                 path = graph.dijkstra(AP, 'out')
                 self.minus_use_bandwidth(path, btype)
                 print('start from {}, type is {}\n{}\n\n'.format(AP, btype, path))
-    
+                PathTable().insert_path(AP=AP.replace('\'','"'), app_type=btype.replace('\'','"'), path=str(path).replace('\'','"'))
+
     def minus_use_bandwidth(self,path,btype):
         for i in range(0,len(path)-1): #拿出目前節點以及下一個節點
             c_node = int(re.search('\d+$',path[i]).group())
@@ -109,6 +113,7 @@ class NodeINFO(QThread):
     def get_link_have_minus(self, c_node, n_node):
         all_link = LinkTable().pop_link_end_with(end_node=c_node) + LinkTable().pop_link_start_with(start_node=c_node) + LinkTable().pop_link_end_with(end_node=n_node) + LinkTable().pop_link_start_with(start_node=n_node)
         all_link.remove([c_node,n_node])
+        print(all_link)
         return all_link
 
     def get_btype_bandwidth(self, btype):

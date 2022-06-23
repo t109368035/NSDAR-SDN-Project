@@ -7,6 +7,7 @@ from DBControll.RuleTable import RuleTable
 from DBControll.UserTable import UserTable
 from DBControll.NodeTable import NodeTable
 from DBControll.LinkTable import LinkTable
+from DBControll.PathTable import PathTable
 from sdn_controller.SetRule import SetRule
 from node_info.info_center import NodeINFO
 from get_user.get_flow import Get_Live_Flow
@@ -50,6 +51,7 @@ class MainWindow(QDialog):
 #######
     def collect_ETT(self):
         self.enable_ETT_button("False")
+        PathTable().delete_all()
         LinkTable().delete_all()
         self.link = LinkRequest()
         self.link.start()
