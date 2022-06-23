@@ -6,11 +6,13 @@ from DBControll.ConnectDatabase import ConnectDatabase
 from DBControll.RuleTable import RuleTable
 from DBControll.UserTable import UserTable
 from DBControll.NodeTable import NodeTable
+from DBControll.LinkTable import LinkTable
 from sdn_controller.SetRule import SetRule
 from node_info.info_center import NodeINFO
 from get_user.get_flow import Get_Live_Flow
 from get_user.get_packet import Remote_capture
 from ssh.power_controll import PowerControll
+from path_calculate.link_request import LinkRequest
 
 class MainWindow(QDialog):
     def __init__(self):
@@ -47,11 +49,17 @@ class MainWindow(QDialog):
 #collect ETT
 #######
     def collect_ETT(self):
-        print(self.nodeinfo.iperf_test_request())
+        self.enable_ETT_button("False")
+        LinkTable().delete_all()
+        self.link = LinkRequest()
+        self.link.start()
+        self.link.enable_ETT.connect(self.enable_ETT_button)
 
     def enable_ETT_button(self, data):
-        self.ETT_Button.setEnabled(True)
-
+        if data == "True":
+            self.ETT_Button.setEnabled(True)
+        else:
+            self.ETT_Button.setEnabled(False)
 #######
 #user info
 #######

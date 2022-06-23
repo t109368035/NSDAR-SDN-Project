@@ -6,7 +6,7 @@ from workwidget.main_widget import MainWindow
 from sdn_controller.excute_ryu import Excute_ryu
 from sdn_controller.SetRule import SetRule
 from DBControll.AppTable import AppTable
-
+from DBControll.LinkTable import LinkTable
 
 class Mainapp:
     def __init__(self):
@@ -26,6 +26,7 @@ class Mainapp:
         except:
             SetRule().delete_rule(action='all')
             NodeTable().delete_all()
+            LinkTable().delete_all()
             #AppTable().delete_all()
             print("Exiting")
 

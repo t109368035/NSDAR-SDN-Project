@@ -1,6 +1,6 @@
 #尚未完成收到節點資訊後，處理的程序。
 import paho.mqtt.client as mqtt
-import json, time, threading
+import json, time
 from PyQt5.QtCore import QThread, pyqtSignal, QTimer
 from DBControll.ConnectDatabase import ConnectDatabase
 from DBControll.NodeTable import NodeTable
@@ -53,7 +53,7 @@ class NodeINFO(QThread):
     def dpid(self):
         if len(NodeTable().pop_all_node()) == 12 and self.getpacket_flag is False:
             self.getpacket_flag = True
-            self.enable_ETT.emit('add node')
+            self.enable_ETT.emit('True')
             self.start_getpacket15.emit('start')
             self.start_getpacket05.emit('start')
             self.dpid_timer.stop()
@@ -70,13 +70,6 @@ class NodeINFO(QThread):
             NodeTable().insert_node(node_name=node_ID, node_dpid=node_info['dpid'], node_mac=node_info['mac'])
             self.dpid_info.emit('add node')
 
-    def iperf_test_request(self):
-        for i in range(1,13):
-            print(i)
-            self.publish('info_request', 'test{}'.format(i))
-            time.sleep(4)
-        return 'send iperf request'
-
     def add_link(self, data):
         self.link_count+=1
         LinkTable().insert_link(start_node=data['start'], end_node=data['end'],
@@ -84,20 +77,8 @@ class NodeINFO(QThread):
         if self.link_count == 12:
             print(LinkTable().pop_ETT())
             self.link_count = 0
-        """packetsize = 12112 #bits
-        bandwidth = data['chquality']['bandwidth']
-        if not bandwidth or bandwidth == 0.0:
-            bandwidth = 1000
-        etx = data['chquality']['etx']
-        ett = data['chquality']['start'], data['chquality']['end'],  etx*(packetsize/bandwidth)
-        print(type(ett))
-        print(ett)
-        self.ett_list.append(ett)
-        if len(self.ett_list) == 12:
-            print(self.ett_list)
-            self.ett_list = list()
-        #    path = Graph(self.ett_list)
-        #    print(list(path.dijkstra("map15", "out")))"""
+
+    #def get_path(self):
 
     def run(self):
         self.subscribe()
