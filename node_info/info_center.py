@@ -1,6 +1,6 @@
 #尚未完成收到節點資訊後，處理的程序。
 import paho.mqtt.client as mqtt
-import json, time
+import json, re
 from PyQt5.QtCore import QThread, pyqtSignal, QTimer
 from DBControll.ConnectDatabase import ConnectDatabase
 from DBControll.NodeTable import NodeTable
@@ -54,8 +54,8 @@ class NodeINFO(QThread):
         if len(NodeTable().pop_all_node()) == 12 and self.getpacket_flag is False:
             self.getpacket_flag = True
             self.enable_ETT.emit('True')
-            self.start_getpacket15.emit('start')
-            self.start_getpacket05.emit('start')
+            #self.start_getpacket15.emit('start')
+            #self.start_getpacket05.emit('start')
             self.dpid_timer.stop()
         elif len(NodeTable().pop_all_node()) < 12 and self.getpacket_flag is True:
             self.getpacket_flag = False
@@ -75,10 +75,50 @@ class NodeINFO(QThread):
         LinkTable().insert_link(start_node=data['start'], end_node=data['end'],
                                 bandwidth=data['bandwidth'], ETX=data['etx'])
         if self.link_count == 12:
-            print(LinkTable().pop_ETT())
+            self.get_APP_path()
+            self.get_normal_path()
             self.link_count = 0
 
-    #def get_path(self):
+    def get_normal_path(self):
+        for AP in ['map15', 'map5']:
+            graph = Graph(LinkTable().pop_ETT())
+            path = graph.dijkstra(AP, 'out')
+            print('start from {}, type is {}\n{}\n\n'.format(AP, 'normal', path))
+
+    def get_APP_path(self):
+        for btype in ['Mission', 'Mobile', 'Massive']:
+            for AP in ['map15', 'map5']:
+                graph = Graph(LinkTable().pop_ETT())
+                path = graph.dijkstra(AP, 'out')
+                self.minus_use_bandwidth(path, btype)
+                print('start from {}, type is {}\n{}\n\n'.format(AP, btype, path))
+    
+    def minus_use_bandwidth(self,path,btype):
+        for i in range(0,len(path)-1): #拿出目前節點以及下一個節點
+            c_node = int(re.search('\d+$',path[i]).group())
+            n_node = int(re.search('\d+$',path[i+1]).group())
+            if not abs(n_node - c_node) == 1: #取出無線link
+                for link in self.get_link_have_minus(path[i], path[i+1]): #取出受到影響所有link                    
+                        original_bandwidth = LinkTable().pop_bandwidth(start_node=link[0], end_node=link[1])
+                        bandwidth=original_bandwidth-self.get_btype_bandwidth(btype)
+                        if bandwidth<=0:
+                            LinkTable().delete_link(start_node=link[0],end_node=link[1])
+                        else:
+                            LinkTable().modify_bandwidth(start_node=link[0], end_node=link[1], bandwidth=bandwidth)
+    
+    def get_link_have_minus(self, c_node, n_node):
+        all_link = LinkTable().pop_link_end_with(end_node=c_node) + LinkTable().pop_link_start_with(start_node=c_node) + LinkTable().pop_link_end_with(end_node=n_node) + LinkTable().pop_link_start_with(start_node=n_node)
+        all_link.remove([c_node,n_node])
+        return all_link
+
+    def get_btype_bandwidth(self, btype):
+        if btype is 'Mission':#設定每種應用類型使用的頻寬
+            use = 25000000
+        elif btype is 'Mobile':
+            use = 15000000
+        elif btype is 'Massive':
+            use = 5000000
+        return use
 
     def run(self):
         self.subscribe()

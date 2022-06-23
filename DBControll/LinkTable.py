@@ -36,6 +36,30 @@ class LinkTable:
             cursor.execute(command)
             connection.commit()
 
+    def pop_link_start_with(self, start_node):
+        command = "SELECT * FROM link_table WHERE start_node='{}';".format(start_node)
+
+        with DBConnection() as connection:
+            cursor = connection.cursor()
+            cursor.execute(command)
+            record_from_db = cursor.fetchall()
+        try:
+            return [[row['start_node'], row['end_node']] for row in record_from_db]
+        except:
+            return None
+
+    def pop_link_end_with(self, end_node):
+        command = "SELECT * FROM link_table WHERE end_node='{}';".format(end_node)
+
+        with DBConnection() as connection:
+            cursor = connection.cursor()
+            cursor.execute(command)
+            record_from_db = cursor.fetchall()
+        try:
+            return [[row['start_node'], row['end_node']] for row in record_from_db]
+        except:
+            return None
+            
     def pop_bandwidth(self, start_node, end_node):
         command = "SELECT * FROM link_table WHERE start_node='{}' AND end_node='{}';".format(start_node, end_node)
 

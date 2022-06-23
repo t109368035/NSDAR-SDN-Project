@@ -2,7 +2,9 @@
 # https://dev.to/mariamxl/dijkstras-algorithm-in-python-algorithms-for-beginners-dkc
 
 from collections import deque, namedtuple
-import re
+import re,numpy
+
+from importlib_resources import path
 
 # we'll use infinity as a default distance to nodes.
 inf = float('inf')
@@ -19,11 +21,11 @@ class Graph:
         wrong_edges = [i for i in edges if len(i) not in [2, 3]]
         if wrong_edges:
             raise ValueError('Wrong edges data: {}'.format(wrong_edges))
-        self.static_edges = [('map15', 'map16', 0), ('mp55', 'mp56', 0), ('mpp98', 'out', 0),
+        static_edges = [('map15', 'map16', 0), ('mp55', 'mp56', 0), ('mpp98', 'out', 0),
                              ('mpp99', 'out', 0), ('map5', 'map6', 0), ('mp45', 'mp46', 0),
                              ('mpp88', 'out', 0), ('mpp89', 'out', 0)]
+        edges = edges + static_edges
         self.edges = [make_edge(*edge) for edge in edges]
-        #print(self.edges)
 
     @property
     def vertices(self):
@@ -92,10 +94,28 @@ class Graph:
             current_vertex = previous_vertices[current_vertex]
         if path:
             path.appendleft(current_vertex)
-        return path
+        
+        path.pop()
+        return list(path)
 
-
-#graph = Graph([
-#    ("a", "b", 7),  ("a", "c", 9),  ("a", "f", 14), ("b", "c", 10),
-#    ("b", "d", 15), ("c", "d", 11), ("c", "f", 2),  ("d", "e", 6),
-#    ("e", "f", 9)])
+"""graph = Graph([
+    ("a", "b", 7),  ("a", "c", 9),  ("a", "f", 14), ("b", "c", 10),
+    ("b", "d", 15), ("c", "d", 11), ("c", "f", 2),  ("d", "e", 6),
+    ("e", "f", 9)])
+print(graph.dijkstra("a", "e"))"""
+"""path = ['map15', 'map16', 'mp56', 'mpp99', 'out']
+for i in range(0,len(path)-2):
+    c_node = int(re.search('\d+$',path[i]).group())
+    n_node = int(re.search('\d+$',path[i+1]).group())
+    if not abs(n_node - c_node) == 1:
+        print('{} {} \n'.format(c_node, n_node))"""
+"""a = 2
+b = 2
+if not(a==1 and b==2):
+    print('hello')"""
+"""a = [[1,2],[2,3],[3,8]]
+b = [[3,8],[5,6]]
+c = a+b
+print(c)
+c.remove([3,8])
+print(c)"""
