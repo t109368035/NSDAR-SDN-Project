@@ -55,8 +55,6 @@ class NodeINFO(QThread):
     def dpid(self):
         if len(NodeTable().pop_all_node()) == 12 and self.getpacket_flag is False:
             self.getpacket_flag = True
-            self.start_getpacket15.emit('start')
-            self.start_getpacket05.emit('start')
             self.enable_ETT.emit('True')
             self.dpid_timer.stop()
         elif len(NodeTable().pop_all_node()) < 12 and self.getpacket_flag is True:
