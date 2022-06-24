@@ -27,16 +27,3 @@ class AppTable:
             cursor = connection.cursor()
             cursor.execute(command)
             connection.commit()
-
-"""
-    def pop_user_rule(self, user_ip):
-        command = "SELECT * FROM rule_table WHERE user_ip='{}';".format(user_ip)
-
-        with DBConnection() as connection:
-            cursor = connection.cursor()
-            cursor.execute(command)
-            record_from_db = cursor.fetchall()
-
-        return [row['user_rule'] for row in record_from_db]
-
-"""

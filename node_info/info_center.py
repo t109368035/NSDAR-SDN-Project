@@ -30,6 +30,7 @@ class NodeINFO(QThread):
         self.ett_list = list()
         self.getpacket_flag = False
         self.link_count = 0
+        self.vlan_dict = self.dict_of_vlan()
         
     def on_connect(self, client, userdata, flags, rc, properties=None):
         print("Connected with result code "+str(rc))
@@ -54,9 +55,9 @@ class NodeINFO(QThread):
     def dpid(self):
         if len(NodeTable().pop_all_node()) == 12 and self.getpacket_flag is False:
             self.getpacket_flag = True
+            self.start_getpacket15.emit('start')
+            self.start_getpacket05.emit('start')
             self.enable_ETT.emit('True')
-            #self.start_getpacket15.emit('start')
-            #self.start_getpacket05.emit('start')
             self.dpid_timer.stop()
         elif len(NodeTable().pop_all_node()) < 12 and self.getpacket_flag is True:
             self.getpacket_flag = False
@@ -76,26 +77,30 @@ class NodeINFO(QThread):
         LinkTable().insert_link(start_node=data['start'], end_node=data['end'],
                                 bandwidth=data['bandwidth'], ETX=data['etx'])#bandwidth需要除役以2嗎?因為會掉包
         if self.link_count == 12:
+            self.link_count = 0
             self.get_APP_path()
             self.get_normal_path()
-            self.link_count = 0
+            self.start_getpacket15.emit('start')
+            self.start_getpacket05.emit('start')
 
     def get_normal_path(self):
-        for AP in ['map15', 'map5']:
+        for ap in ['map15', 'map5']:
             btype = 'normal'
             graph = Graph(LinkTable().pop_ETT())
-            path = graph.dijkstra(AP, 'out')
-            print('start from {}, type is {}\n{}\n\n'.format(AP, 'normal', path))
-            PathTable().insert_path(AP=AP.replace('\'','"'), app_type=btype.replace('\'','"'), path=str(path).replace('\'','"'))
+            path = graph.dijkstra(ap, 'out')
+            print('start from {}, type is {}\n{}\n\n'.format(ap, 'normal', path))
+            PathTable().insert_path(AP=ap.replace('\'','"'), app_type=btype.replace('\'','"'),
+                                    path=str(path).replace('\'','"'), vlan=self.vlan_dict[ap][btype])
 
     def get_APP_path(self):
         for btype in ['Mission', 'Mobile', 'Massive']:
-            for AP in ['map15', 'map5']:
+            for ap in ['map15', 'map5']:
                 graph = Graph(LinkTable().pop_ETT())
-                path = graph.dijkstra(AP, 'out')
+                path = graph.dijkstra(ap, 'out')
                 self.minus_use_bandwidth(path, btype)
-                print('start from {}, type is {}\n{}\n\n'.format(AP, btype, path))
-                PathTable().insert_path(AP=AP.replace('\'','"'), app_type=btype.replace('\'','"'), path=str(path).replace('\'','"'))
+                print('start from {}, type is {}\n{}\n\n'.format(ap, btype, path))
+                PathTable().insert_path(AP=ap.replace('\'','"'), app_type=btype.replace('\'','"'),
+                                        path=str(path).replace('\'','"'), vlan=self.vlan_dict[ap][btype])
 
     def minus_use_bandwidth(self,path,btype):
         for i in range(0,len(path)-1): #拿出目前節點以及下一個節點
@@ -124,6 +129,11 @@ class NodeINFO(QThread):
         elif btype is 'Massive':
             use = 5000000
         return use
+    
+    def dict_of_vlan(self):
+        v = {'map15':{'normal':15 ,'Mission':18, 'Mobile':17, 'Massive':16},
+             'map5':{'normal':5 ,'Mission':8, 'Mobile':7, 'Massive':6}}
+        return v
 
     def run(self):
         self.subscribe()

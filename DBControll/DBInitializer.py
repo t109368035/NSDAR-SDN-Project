@@ -8,7 +8,8 @@ necessary_table_to_create = {
             (
                 AP VARCHAR(255),
                 app_type VARCHAR(255),
-                path VARCHAR(255)
+                path VARCHAR(255),
+                vlan VARCHAR(255)
             );
         """,
 
@@ -50,9 +51,11 @@ necessary_table_to_create = {
         """
             CREATE TABLE rule_table
             (
+                AP VARCHAR(255), 
+                app_type VARCHAR(255),
                 user_ip VARCHAR(255),
                 user_rule VARCHAR(255),
-                dpid VARCHAR(255)
+                node_name VARCHAR(255)
             );
         """,
     

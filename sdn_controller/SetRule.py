@@ -3,7 +3,8 @@ from DBControll.ConnectDatabase import ConnectDatabase
 from DBControll.NodeTable import NodeTable
 from DBControll.UserTable import UserTable
 from DBControll.RuleTable import RuleTable
-from sdn_controller.rest_api_command import PostRestAPI
+from DBControll.PathTable import PathTable
+from sdn_controller.rest_api_command import GenerateRule
 import requests
 
 class SetRule:
@@ -11,6 +12,7 @@ class SetRule:
         self.rule = None
         self.action = None
         ConnectDatabase()
+        self.queue_dict = self.dict_of_queue()
 
     def post_request(self, rule,  action):
         url = "http://localhost:8080/stats/flowentry/"+action
@@ -20,48 +22,41 @@ class SetRule:
             time.sleep(0.3)
             self.post_request(self.rule, self.action)
 
-    
     def delete_rule(self, action='all', ip=None):
         self.action = 'delete'
-        if action == 'all':
-            for ip in UserTable().pop_all_user():
-                for rule in RuleTable().pop_user_rule(ip):
-                    self.rule = rule
-                    self.post_request(rule, 'delete')
-                    #print('Delete {}, {}'.format(self.check_status(self.post_request(rule, 'delete')), rule))
-                RuleTable().delete_user_rule(ip)
-                UserTable().delete_user(ip)
+        if action == 'all':#改成全刪
+            for rule in RuleTable().pop_all_rule():
+                self.rule = rule
+                self.post_request(rule, 'delete')
+            RuleTable().delete_all()
         if action == 'single user':
             for rule in RuleTable().pop_user_rule(ip):
                 self.rule = rule
                 self.post_request(rule, 'delete')
-                #print('Delete {}, {}'.format(self.check_status(self.post_request(rule, 'delete')), rule))
             RuleTable().delete_user_rule(ip)
             UserTable().delete_user(ip)
 
-    def add_rule(self, user_ip=None, rule_list=None, re_add=False):
+    def add_rule(self, ap=None, app_type=None, user_ip=None, rule_list=None, node_name=None, re_add=False):
         self.action = 'add'
         for rule in rule_list:
             self.rule = rule
             self.post_request(rule, 'add')
             if not re_add:
-                dpid = re.search('(?<=:)\d+', rule).group()
-                RuleTable().insert_a_rule(user_ip, rule, dpid)
+                RuleTable().insert_a_rule(AP=ap, app_type=app_type, user_ip=user_ip, user_rule=rule, node_name=node_name)
 
-    def check_status(self, status):
-        if '200' in status:
-            return 'Success'
-        else:
-            return 'Fail'
-
-    def excute(self,ip_address):
+    def excute(self,user_ip,ap,app_type,server_ip=None):
         rule = list()
-        user_info = UserTable().pop_user_info(ip_address)
-        path = eval(user_info['user_path'])
+        user_info = UserTable().pop_user_info(user_ip)
+        path_info = PathTable().pop_AP_type_path(ap, app_type) 
+        vlan = path_info['vlan']
+        queue = self.queue_dict[vlan]
+        priority = self.assign_priority(app_type)
+        path = eval(path_info['path'])
         """*index是頭=>map, index是中間=>mp, index是尾=>mpp
            *利用node ip來判別input, output port"""
         for node in path:
             node_index = path.index(node)
+            node_info = NodeTable().pop_node_info(node)
             if node_index == 0:
                 c_node = int(re.search('\d+$',path[node_index]).group())
                 n_node = int(re.search('\d+$',path[node_index+1]).group())
@@ -69,14 +64,16 @@ class SetRule:
                     port = 2
                 else:
                     port = 1
-                rule = rule + PostRestAPI(user_info=user_info, node_info=NodeTable().pop_node_info(node),
-                                          next_node_info=NodeTable().pop_node_info(path[node_index+1]),
-                                          previous_node_info=None, port=port).map()  
+                rule = GenerateRule(user_info=user_info, node_info=node_info,
+                                    next_node_info=NodeTable().pop_node_info(path[node_index+1]),
+                                    previous_node_info=None, port=port, vlan=vlan, queue_id=queue, priority=priority).map()  
+                self.add_rule(ap=ap, app_type=app_type, user_ip=user_ip, rule_list=rule, node_name=node_info['node_name'])
             elif node_index == len(path)-1:
-                rule = rule + PostRestAPI(user_info=user_info, node_info=NodeTable().pop_node_info(node),
-                                          next_node_info=None,
-                                          previous_node_info=NodeTable().pop_node_info(path[node_index-1]),
-                                          port=None).mpp()
+                rule = GenerateRule(user_info=user_info, node_info=node_info,
+                                    next_node_info=None,
+                                    previous_node_info=NodeTable().pop_node_info(path[node_index-1]),
+                                    port=None, vlan=vlan, queue_id=queue, priority=priority).mpp()
+                self.add_rule(ap=ap, app_type=app_type, user_ip=user_ip, rule_list=rule, node_name=node_info['node_name'])
             else:
                 port_list = ['"IN_PORT"', '"IN_PORT"']
                 c_node = int(re.search('\d+$',path[node_index]).group())
@@ -86,9 +83,21 @@ class SetRule:
                     port_list = [1, 2]
                 if abs(c_node - p_node) != 1 and abs(n_node - c_node) == 1:
                     port_list = [2, 1]
-                rule = rule + PostRestAPI(user_info=user_info, node_info=NodeTable().pop_node_info(node),
-                                          next_node_info=NodeTable().pop_node_info(path[node_index+1]),
-                                          previous_node_info=NodeTable().pop_node_info(path[node_index-1]),
-                                          port=port_list).mp()
-
-        self.add_rule(user_ip=user_info['user_ip'], rule_list=rule)
+                rule = GenerateRule(user_info=user_info, node_info=node_info,
+                                    next_node_info=NodeTable().pop_node_info(path[node_index+1]),
+                                    previous_node_info=NodeTable().pop_node_info(path[node_index-1]),
+                                    port=port_list, vlan=vlan, queue_id=queue, priority=priority).mp()
+                self.add_rule(ap=ap, app_type=app_type, user_ip='mp_for_{}_{}'.format(ap, app_type), rule_list=rule, node_name=node_info['node_name'])
+        
+    def dict_of_queue(self):
+        q = {'5': 3, '6': 2, '7': 4, '8': 5,
+             '15': 3, '16': 2, '17': 4, '18': 5}
+        return q
+    
+    def assign_priority(self, btype):
+        if btype == 'normal':
+            return 100
+        elif btype == 'super':
+            return 300
+        else:
+            return 200

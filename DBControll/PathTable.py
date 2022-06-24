@@ -1,8 +1,8 @@
 from DBControll.DBConnection import DBConnection
 
 class PathTable:
-    def insert_path(self, AP, app_type, path):
-        command = "INSERT INTO path_table (AP, app_type, path) VALUES  ('{}', '{}', '{}');".format(AP, app_type, path)
+    def insert_path(self, AP, app_type, path, vlan):
+        command = "INSERT INTO path_table (AP, app_type, path, vlan) VALUES  ('{}', '{}', '{}', '{}');".format(AP, app_type, path, vlan)
             
         with DBConnection() as connection:
             cursor = connection.cursor()
@@ -16,7 +16,7 @@ class PathTable:
             cursor = connection.cursor()
             cursor.execute(command)
             record_from_db = cursor.fetchone()
-        return record_from_db['path ']
+        return {'path': record_from_db['path'], 'vlan': record_from_db['vlan']}
     
     def pop_AP_path(self, AP):
         command = "SELECT * FROM path_table WHERE AP='{}';".format(AP)

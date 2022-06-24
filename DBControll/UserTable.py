@@ -37,10 +37,18 @@ class UserTable:
             cursor.execute(command)
             record_from_db = cursor.fetchone()
 
-        return {'user_ip': record_from_db['user_ip'], 'user_mac': record_from_db['user_mac'], 'user_vlan': record_from_db['user_vlan'], 'user_path': record_from_db['user_path'], 'user_type': record_from_db['user_type']}
+        return {'user_ip': record_from_db['user_ip'], 'user_mac': record_from_db['user_mac'], 'user_vlan': record_from_db['user_vlan'], 'user_path': record_from_db['user_path'], 'user_type': record_from_db['user_type'], 'user_ap': record_from_db['user_ap']}
 
     def delete_user(self, user_ip):
         command = "DELETE FROM user_table WHERE user_ip='{}';".format(user_ip)
+
+        with DBConnection() as connection:
+            cursor = connection.cursor()
+            cursor.execute(command)
+            connection.commit()
+    
+    def delete_all(self):
+        command = "DELETE FROM user_table;"
 
         with DBConnection() as connection:
             cursor = connection.cursor()

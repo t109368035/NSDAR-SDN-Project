@@ -62,6 +62,7 @@ class MainWindow(QDialog):
             self.ETT_Button.setEnabled(True)
         else:
             self.ETT_Button.setEnabled(False)
+
 #######
 #user info
 #######
@@ -134,9 +135,9 @@ class MainWindow(QDialog):
             print('\n\n===========\nstop getpacket05 : {}\n===========\n\n'.format(time.ctime()))
 
     def start_getpacket15(self, condition=None):
-        dpid_rule = RuleTable().pop_dpid_rule(NodeTable().pop_node_info('map15')['node_dpid'])
-        if dpid_rule and not self.start_getflow15_flag:
-            SetRule().add_rule(rule_list=dpid_rule, re_add=True)
+        node_rule = RuleTable().pop_node_rule(NodeTable().pop_node_info('map15')['node_name'])
+        if node_rule and not self.start_getflow15_flag:
+            SetRule().add_rule(rule_list=node_rule, re_add=True)
             self.check_start_getflow('map15 start')
         self.getpacket15_flag = True
         print('\n\n===========\nstart getpacket15 : {}\n===========\n\n'.format(time.ctime()))
@@ -145,9 +146,9 @@ class MainWindow(QDialog):
         self.getpacket15.map_user.connect(self.loaddata_table_userdata)
 
     def start_getpacket05(self, condition=None):
-        dpid_rule = RuleTable().pop_dpid_rule(NodeTable().pop_node_info('map5')['node_dpid'])
-        if dpid_rule and not self.start_getflow05_flag:
-            SetRule().add_rule(rule_list=dpid_rule, re_add=True)
+        node_rule = RuleTable().pop_node_rule(NodeTable().pop_node_info('map5')['node_name'])
+        if node_rule and not self.start_getflow05_flag:
+            SetRule().add_rule(rule_list=node_rule, re_add=True)
             self.check_start_getflow('map5 start')
         self.getpacket05_flag = True
         print('\n\n===========\nstart getpacket05 : {}\n===========\n\n'.format(time.ctime()))
