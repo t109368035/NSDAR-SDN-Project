@@ -1,8 +1,11 @@
+from pydoc import cli
 import subprocess, time
 from PyQt5.QtCore import QThread, pyqtSignal, QTimer
 from DBControll.ConnectDatabase import ConnectDatabase
 from DBControll.AppTable import AppTable
 from DBControll.UserTable import UserTable
+from DBControll.PathTable import PathTable
+from sdn_controller.SetRule import SetRule
 
 '''
 擷取在map的live flow
@@ -18,6 +21,7 @@ class Get_Live_Flow(QThread):
         self.ftimer = QTimer(self)
         self.ftimer.timeout.connect(self.store_user_flow)
         self.ftimer.start(20000)
+        self.dict_user_to_server = dict()
     
     def run(self):
         print('\n\n===========\nstart getflow{} : {}\n===========\n\n'.format(self.node, time.ctime()))
@@ -44,6 +48,7 @@ class Get_Live_Flow(QThread):
         return self.row_data_proccess(raw_data)
   
     def store_user_flow(self):
+        AppTable().delete_all()
         store_time = time.ctime()
         user_list = UserTable().pop_AP_user('map{}'.format(self.node))
         #print('user list in dataset: {}'.format(user_list))
@@ -53,13 +58,14 @@ class Get_Live_Flow(QThread):
             for user in user_list:
                 for flow in flow_list:
                     client_ip = flow['client']['ip']
-                    if user == client_ip and 'DNS' not in flow['protocol']['l7']:
-                        AppTable().insert_a_app(store_time, user, flow['client']['is_dhcp'],flow['client']['port'],
-                                                flow['server']['name'],flow['server']['ip'],flow['server']['port'],
-                                                flow['server']['is_broadcast'],flow['protocol']['l4'], 
-                                                flow['protocol']['l7'], flow['first_seen'], flow['last_seen'],
-                                                flow['duration'], flow['bytes'])
+                    Layer7 = flow['protocol']['l7']
+                    server_ip = flow['server']['ip']
+                    if user == client_ip: #and 'DNS' not in Layer7 and 'ICMP' not in Layer7 and 'LLMNR' not in Layer7 and 'WSD' not in Layer7 and 'NetBIOS' not in Layer7 and 'SSDP' not in Layer7 and 'DHCP' not in Layer7:
+                        AppTable().insert_a_app(store_time, user,flow['client']['port'],flow['server']['name'],
+                                                server_ip,flow['server']['port'],flow['protocol']['l4'], 
+                                                Layer7, flow['first_seen'], flow['last_seen'],flow['duration'], flow['bytes'])
                         check_user_list.add(user)
+                        self.determin_service(server_ip=server_ip, client_ip=client_ip)
             #print('user list in ntop: {}'.format(check_user_list))
             self.delete_user(user_list, check_user_list)
         elif not user_list and flow_list:
@@ -79,3 +85,14 @@ class Get_Live_Flow(QThread):
                 delete_user.append(user)
         if delete_user:
             self.user_table_fresh.emit(delete_user)
+
+    def determin_service(self, server_ip, client_ip):
+        if not self.dict_user_to_server.get(client_ip):
+            self.dict_user_to_server[client_ip] = list()
+        user_info = UserTable().pop_user_info(user_ip=client_ip)
+        ap = user_info['user_ap']
+        if server_ip == '10.10.3.200' and '10.10.3.200' not in self.dict_user_to_server[client_ip]:
+            self.dict_user_to_server[client_ip].append(server_ip)
+            app_type = 'Mission'
+            SetRule().excute(user_ip=client_ip, ap=ap, app_type=app_type, server_ip=server_ip)
+            

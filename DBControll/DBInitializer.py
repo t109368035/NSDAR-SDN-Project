@@ -65,12 +65,10 @@ necessary_table_to_create = {
             (
                 stime VARCHAR(255),
                 user_ip VARCHAR(255),
-                user_dhcp VARCHAR(255),
                 user_port VARCHAR(255),
                 server_name VARCHAR(255),
                 server_ip VARCHAR(255),
                 server_port VARCHAR(255),
-                server_broadcast VARCHAR(255),
                 protocol_L4 VARCHAR(255),
                 protocol_L7 VARCHAR(255),
                 first_seen VARCHAR(255),

@@ -30,7 +30,7 @@ class Mainapp:
             NodeTable().delete_all()
             LinkTable().delete_all()
             UserTable().delete_all()
-            #PathTable().delete_all()
+            PathTable().delete_all()
             #AppTable().delete_all()
             print("Exiting")
 

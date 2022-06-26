@@ -97,25 +97,3 @@ class Graph:
         
         path.pop()
         return list(path)
-
-"""graph = Graph([
-    ("a", "b", 7),  ("a", "c", 9),  ("a", "f", 14), ("b", "c", 10),
-    ("b", "d", 15), ("c", "d", 11), ("c", "f", 2),  ("d", "e", 6),
-    ("e", "f", 9)])
-print(graph.dijkstra("a", "e"))"""
-"""path = ['map15', 'map16', 'mp56', 'mpp99', 'out']
-for i in range(0,len(path)-2):
-    c_node = int(re.search('\d+$',path[i]).group())
-    n_node = int(re.search('\d+$',path[i+1]).group())
-    if not abs(n_node - c_node) == 1:
-        print('{} {} \n'.format(c_node, n_node))"""
-"""a = 2
-b = 2
-if not(a==1 and b==2):
-    print('hello')"""
-"""a = [[1,2],[2,3],[3,8]]
-b = [[3,8],[5,6]]
-c = a+b
-print(c)
-c.remove([3,8])
-print(c)"""

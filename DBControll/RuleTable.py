@@ -55,3 +55,15 @@ class RuleTable:
             record_from_db = cursor.fetchall()
 
         return [row['user_rule'] for row in record_from_db]
+
+    def pop_AP_type_mp_rule(self, AP, user_ip, node_name):
+        command = "SELECT * FROM rule_table WHERE AP='{}' AND user_ip='{}' AND node_name='{}';".format(AP, user_ip, node_name)
+
+        with DBConnection() as connection:
+            cursor = connection.cursor()
+            cursor.execute(command)
+            record_from_db = cursor.fetchall()
+        if [row['user_rule'] for row in record_from_db] == list():
+            return False
+        else:
+            return True

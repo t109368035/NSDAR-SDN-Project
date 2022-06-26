@@ -23,14 +23,14 @@ class Remote_capture(QThread):
         self.get()
 
     def get(self):
-        #try:
-        capture = pyshark.RemoteCapture('192.168.1.{}'.format(self.node), 'eth0', bpf_filter='ip src host 10.10.2')
-        for packet in capture: #逐一取出擷取到的封包並且存到database
-            self.add_user(packet['IP'].src, packet['ETH'].src)
-        #except Exception as e:
-        #    print('get_packet: {}'.format(e))
-        #finally:    
-        #    pass
+        try:
+            capture = pyshark.RemoteCapture('192.168.1.{}'.format(self.node), 'eth0', bpf_filter='ip src host 10.10.2')
+            for packet in capture: #逐一取出擷取到的封包並且存到database
+                self.add_user(packet['IP'].src, packet['ETH'].src)
+        except Exception as e:
+            print('get_packet: {}'.format(e))
+        finally:    
+            pass
 
     def add_user(self, ip, mac):
         if ip not in UserTable().pop_all_user() and ip != '10.10.2.1' and '10.10.2' in ip:
