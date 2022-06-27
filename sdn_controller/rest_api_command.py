@@ -1,5 +1,5 @@
 class GenerateRule:
-    def __init__(self, user_info, node_info, next_node_info, previous_node_info, port, vlan, queue_id, priority, server_ip=None):
+    def __init__(self, user_info, node_info, next_node_info, previous_node_info, port, vlan, queue_id, priority, cookie=0, server_ip=None):
         self.user_info = user_info
         self.node_info = node_info
         self.next_node_info = next_node_info
@@ -7,6 +7,7 @@ class GenerateRule:
         self.port = port
         self.queue_id = queue_id
         self.vlan_vid = int(vlan) + 4096
+        self.cookie = cookie
         self.priority = priority
         self.server_ip = dict()
         if server_ip:
@@ -17,26 +18,24 @@ class GenerateRule:
             self.server_ip['src'] = ''
 
     def map(self):
-        table1_push_vlan = '{{"dpid":{},"table_id":1,"priority":{},"match":{{"ipv4_src":"{}"{},"eth_type":2048}},"actions":[{{"type":"PUSH_VLAN","ethertype":33024}},{{"type":"SET_FIELD","field":"vlan_vid","value":{}}},{{"type":"GOTO_TABLE","table_id":3}}]}}'.format(self.node_info['node_dpid'], self.priority, self.user_info['user_ip'], self.server_ip['dst'], self.vlan_vid)
-        #table3_to_node = '{{"dpid":{},"table_id":3,"priority":{},"match":{{"dl_vlan": {}}},"actions":[{{"type":"SET_FIELD","field":"eth_src","value":"{}"}},{{"type":"SET_FIELD","field":"eth_dst","value":"{}"}},{{"type":"SET_QUEUE","queue_id":{}}},{{"type":"OUTPUT","port":{}}}]}}'.format(self.node_info['node_dpid'], self.priority, self.vlan_vid, self.node_info['node_mac'],  self.next_node_info['node_mac'], self.queue_id, self.port)
-        table4_to_device = '{{"dpid":{},"table_id":4,"priority":{},"match":{{"ipv4_dst":"{}","eth_type":2048,"eth_dst":"{}","eth_src":"{}"}},"actions":[{{"type":"SET_FIELD","field":"eth_src","value":"{}"}},{{"type":"SET_FIELD","field":"eth_dst","value":"{}"}},{{"type":"OUTPUT","port":3}}]}}'.format(self.node_info['node_dpid'], self.priority, self.user_info['user_ip'], self.node_info['node_mac'], self.next_node_info['node_mac'], self.node_info['node_mac'], self.user_info['user_mac'])
+        table1_push_vlan = '{{"dpid":{},"cookie":{},"table_id":1,"priority":{},"match":{{"ipv4_src":"{}"{},"eth_type":2048}},"actions":[{{"type":"PUSH_VLAN","ethertype":33024}},{{"type":"SET_FIELD","field":"vlan_vid","value":{}}},{{"type":"GOTO_TABLE","table_id":3}}]}}'.format(self.node_info['node_dpid'], self.cookie, self.priority, self.user_info['user_ip'], self.server_ip['dst'], self.vlan_vid)
+        table4_to_device = '{{"dpid":{},"cookie":{},"table_id":4,"priority":{},"match":{{"ipv4_dst":"{}","eth_type":2048,"eth_dst":"{}","eth_src":"{}"}},"actions":[{{"type":"SET_FIELD","field":"eth_src","value":"{}"}},{{"type":"SET_FIELD","field":"eth_dst","value":"{}"}},{{"type":"OUTPUT","port":3}}]}}'.format(self.node_info['node_dpid'], self.cookie, self.priority, self.user_info['user_ip'], self.node_info['node_mac'], self.next_node_info['node_mac'], self.node_info['node_mac'], self.user_info['user_mac'])
         return [table1_push_vlan, table4_to_device]
     
     def map_to_node(self):
-        table3_to_node = '{{"dpid":{},"table_id":3,"priority":{},"match":{{"dl_vlan": {}}},"actions":[{{"type":"SET_FIELD","field":"eth_src","value":"{}"}},{{"type":"SET_FIELD","field":"eth_dst","value":"{}"}},{{"type":"SET_QUEUE","queue_id":{}}},{{"type":"OUTPUT","port":{}}}]}}'.format(self.node_info['node_dpid'], self.priority, self.vlan_vid, self.node_info['node_mac'],  self.next_node_info['node_mac'], self.queue_id, self.port)
+        table3_to_node = '{{"dpid":{},"cookie":{},"table_id":3,"priority":{},"match":{{"dl_vlan": {}}},"actions":[{{"type":"SET_FIELD","field":"eth_src","value":"{}"}},{{"type":"SET_FIELD","field":"eth_dst","value":"{}"}},{{"type":"SET_QUEUE","queue_id":{}}},{{"type":"OUTPUT","port":{}}}]}}'.format(self.node_info['node_dpid'], self.cookie, self.priority, self.vlan_vid, self.node_info['node_mac'],  self.next_node_info['node_mac'], self.queue_id, self.port)
         return [table3_to_node]
 
     def mp(self): ##output port 選擇
-        table0_to_next_node = '{{"dpid":{},"table_id":0,"priority":{},"match":{{"dl_vlan":{},"eth_src": "{}","eth_dst": "{}"}},"actions":[{{"type":"SET_FIELD","field":"eth_src","value":"{}"}},{{"type":"SET_FIELD","field":"eth_dst","value":"{}"}},{{"type":"OUTPUT","port":{}}}]}}'.format(self.node_info['node_dpid'], self.priority, self.vlan_vid, self.previous_node_info['node_mac'], self.node_info['node_mac'], self.node_info['node_mac'], self.next_node_info['node_mac'], self.port[0])
-        table0_to_previous_node = '{{"dpid":{},"table_id":0,"priority":{},"match":{{"dl_vlan":{},"eth_src": "{}","eth_dst": "{}"}},"actions":[{{"type":"SET_FIELD","field":"eth_src","value":"{}"}},{{"type":"SET_FIELD","field":"eth_dst","value":"{}"}},{{"type":"OUTPUT","port":{}}}]}}'.format(self.node_info['node_dpid'], self.priority, self.vlan_vid, self.next_node_info['node_mac'], self.node_info['node_mac'], self.node_info['node_mac'], self.previous_node_info['node_mac'], self.port[1])
+        table0_to_next_node = '{{"dpid":{},"cookie":{},"table_id":0,"priority":{},"match":{{"dl_vlan":{},"eth_src": "{}","eth_dst": "{}"}},"actions":[{{"type":"SET_FIELD","field":"eth_src","value":"{}"}},{{"type":"SET_FIELD","field":"eth_dst","value":"{}"}},{{"type":"OUTPUT","port":{}}}]}}'.format(self.node_info['node_dpid'], self.cookie, self.priority, self.vlan_vid, self.previous_node_info['node_mac'], self.node_info['node_mac'], self.node_info['node_mac'], self.next_node_info['node_mac'], self.port[0])
+        table0_to_previous_node = '{{"dpid":{},"cookie":{},"table_id":0,"priority":{},"match":{{"dl_vlan":{},"eth_src": "{}","eth_dst": "{}"}},"actions":[{{"type":"SET_FIELD","field":"eth_src","value":"{}"}},{{"type":"SET_FIELD","field":"eth_dst","value":"{}"}},{{"type":"OUTPUT","port":{}}}]}}'.format(self.node_info['node_dpid'], self.cookie, self.priority, self.vlan_vid, self.next_node_info['node_mac'], self.node_info['node_mac'], self.node_info['node_mac'], self.previous_node_info['node_mac'], self.port[1])
         return [table0_to_next_node, table0_to_previous_node]
     
     def mpp(self):
-        table1_push_vlan = '{{"dpid":{},"table_id":1,"priority":{},"match":{{"ipv4_dst":"{}"{},"eth_type":2048}},"actions":[{{"type":"PUSH_VLAN","ethertype":33024}},{{"type":"SET_FIELD","field":"vlan_vid","value":{}}},{{"type":"GOTO_TABLE","table_id":3}}]}}'.format(self.node_info['node_dpid'], self.priority, self.user_info['user_ip'], self.server_ip['src'], self.vlan_vid)
-        #table3_to_node = '{{"dpid":{},"table_id":3,"priority":{},"match":{{"dl_vlan": {}}},"actions":[{{"type":"SET_FIELD","field":"eth_dst","value":"{}"}},{{"type":"SET_QUEUE","queue_id":{}}},{{"type":"OUTPUT","port":1}}]}}'.format(self.node_info['node_dpid'], self.priority, self.vlan_vid, self.previous_node_info['node_mac'], self.queue_id)
-        table4_to_internet = '{{"dpid":{},"table_id":4,"priority":{},"match":{{"ipv4_src":"{}","eth_type":2048,"eth_dst":"{}","eth_src":"{}"}},"actions":[{{"type":"SET_FIELD","field":"eth_src","value":"{}"}},{{"type":"OUTPUT","port":"LOCAL"}}]}}'.format(self.node_info['node_dpid'], self.priority, self.user_info['user_ip'], self.node_info['node_mac'], self.previous_node_info['node_mac'], self.user_info['user_mac'])
+        table1_push_vlan = '{{"dpid":{},"cookie":{},"table_id":1,"priority":{},"match":{{"ipv4_dst":"{}"{},"eth_type":2048}},"actions":[{{"type":"PUSH_VLAN","ethertype":33024}},{{"type":"SET_FIELD","field":"vlan_vid","value":{}}},{{"type":"GOTO_TABLE","table_id":3}}]}}'.format(self.node_info['node_dpid'], self.cookie, self.priority, self.user_info['user_ip'], self.server_ip['src'], self.vlan_vid)
+        table4_to_internet = '{{"dpid":{},"cookie":{},"table_id":4,"priority":{},"match":{{"ipv4_src":"{}","eth_type":2048,"eth_dst":"{}","eth_src":"{}"}},"actions":[{{"type":"SET_FIELD","field":"eth_src","value":"{}"}},{{"type":"OUTPUT","port":"LOCAL"}}]}}'.format(self.node_info['node_dpid'], self.cookie, self.priority, self.user_info['user_ip'], self.node_info['node_mac'], self.previous_node_info['node_mac'], self.user_info['user_mac'])
         return [table1_push_vlan, table4_to_internet]
     
     def mpp_to_node(self):
-        table3_to_node = '{{"dpid":{},"table_id":3,"priority":{},"match":{{"dl_vlan": {}}},"actions":[{{"type":"SET_FIELD","field":"eth_dst","value":"{}"}},{{"type":"SET_QUEUE","queue_id":{}}},{{"type":"OUTPUT","port":1}}]}}'.format(self.node_info['node_dpid'], self.priority, self.vlan_vid, self.previous_node_info['node_mac'], self.queue_id)
+        table3_to_node = '{{"dpid":{},"cookie":{},"table_id":3,"priority":{},"match":{{"dl_vlan": {}}},"actions":[{{"type":"SET_FIELD","field":"eth_dst","value":"{}"}},{{"type":"SET_QUEUE","queue_id":{}}},{{"type":"OUTPUT","port":1}}]}}'.format(self.node_info['node_dpid'], self.cookie, self.priority, self.vlan_vid, self.previous_node_info['node_mac'], self.queue_id)
         return [table3_to_node]

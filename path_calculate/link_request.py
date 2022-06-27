@@ -31,7 +31,6 @@ class LinkRequest(QThread):
         self.enable_ETT.emit('True')
         if RuleTable().pop_all_rule() != list():
             self.refresh_rule.emit('refresh')
-            time.sleep(3)
         else:
             print("未進入refresh_normal_rule")
         self.start_getpacket15.emit('start')

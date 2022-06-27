@@ -7,7 +7,6 @@ from DBControll.NodeTable import NodeTable
 from DBControll.LinkTable import LinkTable
 from DBControll.PathTable import PathTable
 from path_calculate.dikstra_graph import Graph
-from sdn_controller.SetRule import SetRule
 
 MQTT_BROKER = '192.168.1.143'
 MQTT_PORT = 1883

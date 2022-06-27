@@ -2,9 +2,7 @@
 # https://dev.to/mariamxl/dijkstras-algorithm-in-python-algorithms-for-beginners-dkc
 
 from collections import deque, namedtuple
-import re,numpy
 
-from importlib_resources import path
 
 # we'll use infinity as a default distance to nodes.
 inf = float('inf')

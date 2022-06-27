@@ -1,4 +1,3 @@
-from pydoc import cli
 import subprocess, time
 from PyQt5.QtCore import QThread, pyqtSignal, QTimer
 from DBControll.ConnectDatabase import ConnectDatabase
@@ -12,7 +11,6 @@ from sdn_controller.SetRule import SetRule
 class Get_Live_Flow(QThread):
     user_table_fresh = pyqtSignal(list)
     stop_getflow = pyqtSignal(str)
-    node_fail = pyqtSignal(str)
     def __init__(self, node):
         super().__init__()
         self.node = node
@@ -51,7 +49,6 @@ class Get_Live_Flow(QThread):
         AppTable().delete_AP_app(ap)
         store_time = time.ctime()
         user_list = UserTable().pop_AP_user(ap)
-        #print('user list in dataset: {}'.format(user_list))
         flow_list = self.get_row_data()
         check_user_list = set()
         if user_list and flow_list:
@@ -60,23 +57,20 @@ class Get_Live_Flow(QThread):
                     client_ip = flow['client']['ip']
                     Layer7 = flow['protocol']['l7']
                     server_ip = flow['server']['ip']
-                    if user == client_ip: #and 'DNS' not in Layer7 and 'ICMP' not in Layer7 and 'LLMNR' not in Layer7 and 'WSD' not in Layer7 and 'NetBIOS' not in Layer7 and 'SSDP' not in Layer7 and 'DHCP' not in Layer7:
+                    if user == client_ip:
                         AppTable().insert_a_app(ap ,store_time, user,flow['client']['port'],flow['server']['name'],
                                                 server_ip,flow['server']['port'],flow['protocol']['l4'], 
                                                 Layer7, flow['first_seen'], flow['last_seen'],flow['duration'], flow['bytes'])
                         check_user_list.add(user)
                         self.determin_service(server_ip=server_ip, client_ip=client_ip)
-            #print('user list in ntop: {}'.format(check_user_list))
             self.delete_user(user_list, check_user_list)
         elif not user_list and flow_list:
-            #print('user list is none')
             self.ftimer.stop()
             self.stop_getflow.emit('{} stop'.format(ap))
         elif user_list and not flow_list:
             print('\n\n\n==============\nntop出問題了 : {}\n==============\n\n\n'.format(store_time))
             self.ftimer.stop()
             self.stop_getflow.emit('{} stop'.format(ap))
-            self.node_fail.emit('{}'.format(ap))
 
     def delete_user(self, original_user_list, check_user_list):
         delete_user = list()

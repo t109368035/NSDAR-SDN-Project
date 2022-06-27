@@ -13,7 +13,6 @@ from sdn_controller.SetRule import SetRule
 from node_info.info_center import NodeINFO
 from get_user.get_flow import Get_Live_Flow
 from get_user.get_packet import Remote_capture
-from ssh.power_controll import PowerControll
 from path_calculate.link_request import LinkRequest
 
 class MainWindow(QDialog):
@@ -37,8 +36,6 @@ class MainWindow(QDialog):
         self.nodeinfo = NodeINFO()
         self.nodeinfo.start()
         self.nodeinfo.dpid_info.connect(self.loaddata_table_nodeinfo)
-        #self.nodeinfo.start_getpacket15.connect(self.start_getpacket15)
-        #self.nodeinfo.start_getpacket05.connect(self.start_getpacket05)
         self.nodeinfo.enable_ETT.connect(self.enable_ETT_button)
 
         ##start flag of get_user
@@ -106,20 +103,16 @@ class MainWindow(QDialog):
     def check_start_getflow(self, condition):
         if condition == 'map15 start' and self.start_getflow15_flag is False:
             self.start_getflow15_flag = True
-            #print('\n\n===========\nstart getflow15 : {}\n===========\n\n'.format(time.ctime()))
             self.get15flow = Get_Live_Flow('15')
             self.get15flow.start()
             self.get15flow.user_table_fresh.connect(self.refresh_table_userdata)
             self.get15flow.stop_getflow.connect(self.check_stop_getflow)
-            self.get15flow.node_fail.connect(self.stop_getpacket)
         elif condition == 'map5 start' and self.start_getflow05_flag is False:
             self.start_getflow05_flag = True
-            #print('\n\n===========\nstart getflow15 : {}\n===========\n\n'.format(time.ctime()))
             self.get05flow = Get_Live_Flow('5')
             self.get05flow.start()
             self.get05flow.user_table_fresh.connect(self.refresh_table_userdata)
             self.get05flow.stop_getflow.connect(self.check_stop_getflow)
-            self.get05flow.node_fail.connect(self.stop_getpacket)
 
     def check_stop_getflow(self, condition):
         if condition == 'map15 stop' and self.start_getflow15_flag is True:
@@ -154,23 +147,7 @@ class MainWindow(QDialog):
 #######
 #node info
 #######
-    def stop_getpacket(self, node):
-        PowerControll().node_reboot(node)
-        NodeTable().delete_node(node)
-        if node == 'map15' and self.getpacket15_flag is True: 
-            self.getpacket15.terminate()    
-            self.getpacket15_flag = False
-            print('\n\n===========\nstop getpacket15 : {}\n===========\n\n'.format(time.ctime()))
-        elif node == 'map5' and self.getpacket05_flag is True: 
-            self.getpacket05.terminate()    
-            self.getpacket05_flag = False
-            print('\n\n===========\nstop getpacket05 : {}\n===========\n\n'.format(time.ctime()))
-
     def start_getpacket15(self, condition=None):
-        #node_rule = RuleTable().pop_node_rule(NodeTable().pop_node_info('map15')['node_name'])
-        #if node_rule and not self.start_getflow15_flag:
-        #    SetRule().add_rule(rule_list=node_rule, re_add=True)
-        #    self.check_start_getflow('map15 start')
         if not self.getpacket15_flag:
             self.getpacket15_flag = True
             print('\n\n===========\nstart getpacket15 : {}\n===========\n\n'.format(time.ctime()))
@@ -179,10 +156,6 @@ class MainWindow(QDialog):
             self.getpacket15.map_user.connect(self.loaddata_table_userdata)
 
     def start_getpacket05(self, condition=None):
-        #node_rule = RuleTable().pop_node_rule(NodeTable().pop_node_info('map5')['node_name'])
-        #if node_rule and not self.start_getflow05_flag:
-        #    SetRule().add_rule(rule_list=node_rule, re_add=True)
-        #    self.check_start_getflow('map5 start')
         if not self.getpacket05_flag:
             self.getpacket05_flag = True
             print('\n\n===========\nstart getpacket05 : {}\n===========\n\n'.format(time.ctime()))
