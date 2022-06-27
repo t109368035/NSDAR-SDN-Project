@@ -2,6 +2,7 @@ import time
 from PyQt5.uic import loadUi
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import QDialog
+from requests import delete
 from DBControll.ConnectDatabase import ConnectDatabase
 from DBControll.RuleTable import RuleTable
 from DBControll.UserTable import UserTable
@@ -51,18 +52,45 @@ class MainWindow(QDialog):
 #######
     def collect_ETT(self):
         self.enable_ETT_button("False")
-        PathTable().delete_all()
-        LinkTable().delete_all()
+        #self.stop_add_user('map15')
+        #self.stop_add_user('map5')
+        #PathTable().delete_all()
+        #LinkTable().delete_all()
         self.link = LinkRequest()
         self.link.start()
         self.link.enable_ETT.connect(self.enable_ETT_button)
 
     def enable_ETT_button(self, data):
         if data == "True":
+            #self.update_normal_rule()
             self.ETT_Button.setEnabled(True)
         else:
             self.ETT_Button.setEnabled(False)
 
+    def update_normal_rule(self):
+        if RuleTable().pop_all_rule() != list():
+            SetRule().delete_rule(action='all')
+            for ip in UserTable().pop_all_user():
+                user_info = UserTable().pop_user_info(user_ip=ip)
+                path = PathTable().pop_AP_type_path(AP=user_info['user_ap'], app_type=user_info['user_type'])
+                UserTable().modify_user_path(user_ip=ip,user_path=path['path'])
+                SetRule().excute(user_ip=ip,ap=user_info['user_ap'],app_type=user_info['user_type'])
+                self.check_start_getflow(condition='{} start'.format(user_info['user_ap']))
+            self.getpacket15.add_user_flag = True
+            self.getpacket05.add_user_flag = True
+
+    def stop_add_user(self, ap):
+        if ap == 'map15' and self.getpacket15_flag:
+            self.getpacket15.add_user_flag = False
+            self.check_stop_getflow('map15 stop')
+            self.start_getflow15_flag = False
+        elif ap == 'map5' and self.getpacket05_flag:
+            self.getpacket05.add_user_flag = False
+            self.check_stop_getflow('map5 stop')
+            self.start_getflow05_flag = False
+        else: 
+            print('程式剛執行，不用停止加入使用者!')
+            
 #######
 #user info
 #######
@@ -135,26 +163,28 @@ class MainWindow(QDialog):
             print('\n\n===========\nstop getpacket05 : {}\n===========\n\n'.format(time.ctime()))
 
     def start_getpacket15(self, condition=None):
-        node_rule = RuleTable().pop_node_rule(NodeTable().pop_node_info('map15')['node_name'])
-        if node_rule and not self.start_getflow15_flag:
-            SetRule().add_rule(rule_list=node_rule, re_add=True)
-            self.check_start_getflow('map15 start')
-        self.getpacket15_flag = True
-        print('\n\n===========\nstart getpacket15 : {}\n===========\n\n'.format(time.ctime()))
-        self.getpacket15 = Remote_capture('15')
-        self.getpacket15.start()
-        self.getpacket15.map_user.connect(self.loaddata_table_userdata)
+        #node_rule = RuleTable().pop_node_rule(NodeTable().pop_node_info('map15')['node_name'])
+        #if node_rule and not self.start_getflow15_flag:
+        #    SetRule().add_rule(rule_list=node_rule, re_add=True)
+        #    self.check_start_getflow('map15 start')
+        if not self.getpacket15_flag:
+            self.getpacket15_flag = True
+            print('\n\n===========\nstart getpacket15 : {}\n===========\n\n'.format(time.ctime()))
+            self.getpacket15 = Remote_capture('15')
+            self.getpacket15.start()
+            self.getpacket15.map_user.connect(self.loaddata_table_userdata)
 
     def start_getpacket05(self, condition=None):
-        node_rule = RuleTable().pop_node_rule(NodeTable().pop_node_info('map5')['node_name'])
-        if node_rule and not self.start_getflow05_flag:
-            SetRule().add_rule(rule_list=node_rule, re_add=True)
-            self.check_start_getflow('map5 start')
-        self.getpacket05_flag = True
-        print('\n\n===========\nstart getpacket05 : {}\n===========\n\n'.format(time.ctime()))
-        self.getpacket05 = Remote_capture('5')
-        self.getpacket05.start()
-        self.getpacket05.map_user.connect(self.loaddata_table_userdata)
+        #node_rule = RuleTable().pop_node_rule(NodeTable().pop_node_info('map5')['node_name'])
+        #if node_rule and not self.start_getflow05_flag:
+        #    SetRule().add_rule(rule_list=node_rule, re_add=True)
+        #    self.check_start_getflow('map5 start')
+        if not self.getpacket05_flag:
+            self.getpacket05_flag = True
+            print('\n\n===========\nstart getpacket05 : {}\n===========\n\n'.format(time.ctime()))
+            self.getpacket05 = Remote_capture('5')
+            self.getpacket05.start()
+            self.getpacket05.map_user.connect(self.loaddata_table_userdata)
 
     def loaddata_table_nodeinfo(self, dpid_data=None):
         node_list = NodeTable().pop_all_node()

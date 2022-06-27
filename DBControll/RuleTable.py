@@ -63,7 +63,8 @@ class RuleTable:
             cursor = connection.cursor()
             cursor.execute(command)
             record_from_db = cursor.fetchall()
+        
         if [row['user_rule'] for row in record_from_db] == list():
             return False
         else:
-            return True
+            return [row['user_rule'] for row in record_from_db]

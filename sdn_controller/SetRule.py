@@ -68,12 +68,23 @@ class SetRule:
                                     next_node_info=NodeTable().pop_node_info(path[node_index+1]),
                                     previous_node_info=None, port=port, vlan=vlan, queue_id=queue, priority=priority, server_ip=server_ip).map()  
                 self.add_rule(ap=ap, app_type=app_type, user_ip=user_ip, rule_list=rule, node_name=node_info['node_name'])
+                if not RuleTable().pop_AP_type_mp_rule(AP=ap, user_ip='map_for_{}_{}'.format(ap, app_type), node_name=node_info['node_name']):
+                    rule = GenerateRule(user_info=user_info, node_info=node_info,
+                                    next_node_info=NodeTable().pop_node_info(path[node_index+1]),
+                                    previous_node_info=None, port=port, vlan=vlan, queue_id=queue, priority=priority, server_ip=server_ip).map_to_node()  
+                    self.add_rule(ap=ap, app_type=app_type, user_ip='map_for_{}_{}'.format(ap, app_type), rule_list=rule, node_name=node_info['node_name'])
             elif node_index == len(path)-1:
                 rule = GenerateRule(user_info=user_info, node_info=node_info,
                                     next_node_info=None,
                                     previous_node_info=NodeTable().pop_node_info(path[node_index-1]),
                                     port=None, vlan=vlan, queue_id=queue, priority=priority, server_ip=server_ip).mpp()
                 self.add_rule(ap=ap, app_type=app_type, user_ip=user_ip, rule_list=rule, node_name=node_info['node_name'])
+                if not RuleTable().pop_AP_type_mp_rule(AP=ap, user_ip='mpp_for_{}_{}'.format(ap, app_type), node_name=node_info['node_name']):
+                    rule = GenerateRule(user_info=user_info, node_info=node_info,
+                                    next_node_info=None,
+                                    previous_node_info=NodeTable().pop_node_info(path[node_index-1]),
+                                    port=None, vlan=vlan, queue_id=queue, priority=priority, server_ip=server_ip).mpp_to_node()  
+                    self.add_rule(ap=ap, app_type=app_type, user_ip='mpp_for_{}_{}'.format(ap, app_type), rule_list=rule, node_name=node_info['node_name'])
             elif not RuleTable().pop_AP_type_mp_rule(AP=ap, user_ip='mp_for_{}_{}'.format(ap, app_type), node_name=node_info['node_name']):
                 port_list = ['"IN_PORT"', '"IN_PORT"']
                 c_node = int(re.search('\d+$',path[node_index]).group())

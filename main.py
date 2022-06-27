@@ -31,7 +31,7 @@ class Mainapp:
             LinkTable().delete_all()
             UserTable().delete_all()
             PathTable().delete_all()
-            #AppTable().delete_all()
+            AppTable().delete_all()
             print("Exiting")
 
 if __name__ == '__main__':

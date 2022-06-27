@@ -63,6 +63,7 @@ necessary_table_to_create = {
         """
             CREATE TABLE app_table
             (
+                AP VARCHAR(255),
                 stime VARCHAR(255),
                 user_ip VARCHAR(255),
                 user_port VARCHAR(255),

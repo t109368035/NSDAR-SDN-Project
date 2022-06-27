@@ -48,9 +48,10 @@ class Get_Live_Flow(QThread):
         return self.row_data_proccess(raw_data)
   
     def store_user_flow(self):
-        AppTable().delete_all()
+        ap = 'map{}'.format(self.node)
+        AppTable().delete_AP_app(ap)
         store_time = time.ctime()
-        user_list = UserTable().pop_AP_user('map{}'.format(self.node))
+        user_list = UserTable().pop_AP_user(ap)
         #print('user list in dataset: {}'.format(user_list))
         flow_list = self.get_row_data()
         check_user_list = set()
@@ -61,7 +62,7 @@ class Get_Live_Flow(QThread):
                     Layer7 = flow['protocol']['l7']
                     server_ip = flow['server']['ip']
                     if user == client_ip: #and 'DNS' not in Layer7 and 'ICMP' not in Layer7 and 'LLMNR' not in Layer7 and 'WSD' not in Layer7 and 'NetBIOS' not in Layer7 and 'SSDP' not in Layer7 and 'DHCP' not in Layer7:
-                        AppTable().insert_a_app(store_time, user,flow['client']['port'],flow['server']['name'],
+                        AppTable().insert_a_app(ap ,store_time, user,flow['client']['port'],flow['server']['name'],
                                                 server_ip,flow['server']['port'],flow['protocol']['l4'], 
                                                 Layer7, flow['first_seen'], flow['last_seen'],flow['duration'], flow['bytes'])
                         check_user_list.add(user)
@@ -71,12 +72,12 @@ class Get_Live_Flow(QThread):
         elif not user_list and flow_list:
             #print('user list is none')
             self.ftimer.stop()
-            self.stop_getflow.emit('map{} stop'.format(self.node))
+            self.stop_getflow.emit('{} stop'.format(ap))
         elif user_list and not flow_list:
             print('\n\n\n==============\nntop出問題了 : {}\n==============\n\n\n'.format(store_time))
             self.ftimer.stop()
-            self.stop_getflow.emit('map{} stop'.format(self.node))
-            self.node_fail.emit('map{}'.format(self.node))
+            self.stop_getflow.emit('{} stop'.format(ap))
+            self.node_fail.emit('{}'.format(ap))
 
     def delete_user(self, original_user_list, check_user_list):
         delete_user = list()

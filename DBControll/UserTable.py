@@ -54,3 +54,11 @@ class UserTable:
             cursor = connection.cursor()
             cursor.execute(command)
             connection.commit()
+
+    def modify_user_path(self, user_ip, user_path):
+        command = "UPDATE user_table SET user_path='{}' WHERE user_ip='{}';".format(user_ip, user_path)
+
+        with DBConnection() as connection:
+            cursor = connection.cursor()
+            cursor.execute(command)
+            connection.commit()
