@@ -2,11 +2,11 @@ import time
 from PyQt5.uic import loadUi
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import QDialog
-from requests import delete
 from DBControll.ConnectDatabase import ConnectDatabase
 from DBControll.RuleTable import RuleTable
 from DBControll.UserTable import UserTable
 from DBControll.NodeTable import NodeTable
+from DBControll.AppTable import AppTable
 from DBControll.LinkTable import LinkTable
 from DBControll.PathTable import PathTable
 from sdn_controller.SetRule import SetRule
@@ -37,8 +37,8 @@ class MainWindow(QDialog):
         self.nodeinfo = NodeINFO()
         self.nodeinfo.start()
         self.nodeinfo.dpid_info.connect(self.loaddata_table_nodeinfo)
-        self.nodeinfo.start_getpacket15.connect(self.start_getpacket15)
-        self.nodeinfo.start_getpacket05.connect(self.start_getpacket05)
+        #self.nodeinfo.start_getpacket15.connect(self.start_getpacket15)
+        #self.nodeinfo.start_getpacket05.connect(self.start_getpacket05)
         self.nodeinfo.enable_ETT.connect(self.enable_ETT_button)
 
         ##start flag of get_user
@@ -52,44 +52,48 @@ class MainWindow(QDialog):
 #######
     def collect_ETT(self):
         self.enable_ETT_button("False")
-        #self.stop_add_user('map15')
-        #self.stop_add_user('map5')
-        #PathTable().delete_all()
-        #LinkTable().delete_all()
+        self.stop_add_user('map15')
+        self.stop_add_user('map5')
+        PathTable().delete_all()
+        LinkTable().delete_all()
         self.link = LinkRequest()
         self.link.start()
         self.link.enable_ETT.connect(self.enable_ETT_button)
+        self.link.refresh_rule.connect(self.refresh_normal_rule)
+        self.link.start_getpacket15.connect(self.start_getpacket15)
+        self.link.start_getpacket05.connect(self.start_getpacket05)
 
     def enable_ETT_button(self, data):
         if data == "True":
-            #self.update_normal_rule()
             self.ETT_Button.setEnabled(True)
         else:
             self.ETT_Button.setEnabled(False)
 
-    def update_normal_rule(self):
-        if RuleTable().pop_all_rule() != list():
-            SetRule().delete_rule(action='all')
-            for ip in UserTable().pop_all_user():
-                user_info = UserTable().pop_user_info(user_ip=ip)
-                path = PathTable().pop_AP_type_path(AP=user_info['user_ap'], app_type=user_info['user_type'])
-                UserTable().modify_user_path(user_ip=ip,user_path=path['path'])
-                SetRule().excute(user_ip=ip,ap=user_info['user_ap'],app_type=user_info['user_type'])
-                self.check_start_getflow(condition='{} start'.format(user_info['user_ap']))
-            self.getpacket15.add_user_flag = True
-            self.getpacket05.add_user_flag = True
+    def refresh_normal_rule(self, signal):
+        print("進入refresh_normal_rule")
+        SetRule().delete_rule(action='all')
+        for ip in UserTable().pop_all_user():
+            user_info = UserTable().pop_user_info(user_ip=ip)
+            path = PathTable().pop_AP_type_path(AP=user_info['user_ap'], app_type=user_info['user_type'])
+            UserTable().modify_user_path(user_ip=ip,user_path=path['path'])
+            SetRule().excute(user_ip=ip,ap=user_info['user_ap'],app_type=user_info['user_type'])
+            self.check_start_getflow(condition='{} start'.format(user_info['user_ap']))
+        self.getpacket15.add_user_flag = True
+        self.getpacket05.add_user_flag = True
 
     def stop_add_user(self, ap):
         if ap == 'map15' and self.getpacket15_flag:
+            print('停止加入{}使用者!'.format(ap))
             self.getpacket15.add_user_flag = False
             self.check_stop_getflow('map15 stop')
-            self.start_getflow15_flag = False
+            AppTable().delete_AP_app(AP=ap)
         elif ap == 'map5' and self.getpacket05_flag:
+            print('停止加入{}使用者!'.format(ap))
             self.getpacket05.add_user_flag = False
             self.check_stop_getflow('map5 stop')
-            self.start_getflow05_flag = False
+            AppTable().delete_AP_app(AP=ap)
         else: 
-            print('程式剛執行，不用停止加入使用者!')
+            print('程式剛執行，不用停止加入{}使用者!'.format(ap))
             
 #######
 #user info

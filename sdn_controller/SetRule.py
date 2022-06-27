@@ -52,8 +52,11 @@ class SetRule:
         queue = self.queue_dict[vlan]
         priority = self.assign_priority(app_type)
         path = eval(path_info['path'])
-        """*index是頭=>map, index是中間=>mp, index是尾=>mpp
-           *利用node ip來判別input, output port"""
+        """
+        *index是頭=>map, index是中間=>mp, index是尾=>mpp。
+        *利用node ip來判別input, output port。
+        *固定的規則只要加一次像是GenerateRule裡面的map_to_node(), mp(), mpp_to_node等function。
+        """
         for node in path:
             node_index = path.index(node)
             node_info = NodeTable().pop_node_info(node)

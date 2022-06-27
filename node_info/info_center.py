@@ -15,8 +15,6 @@ MQTT_ALIVE = 60
 
 class NodeINFO(QThread):
     dpid_info = pyqtSignal(str)
-    start_getpacket15 = pyqtSignal(str)
-    start_getpacket05 = pyqtSignal(str)
     enable_ETT = pyqtSignal(str)
 
     def __init__(self):
@@ -79,8 +77,6 @@ class NodeINFO(QThread):
             self.link_count = 0
             self.get_APP_path()
             self.get_normal_path()
-            self.start_getpacket15.emit('start')
-            self.start_getpacket05.emit('start')
 
     def get_normal_path(self):
         for ap in ['map15', 'map5']:

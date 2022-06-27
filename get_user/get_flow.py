@@ -4,7 +4,6 @@ from PyQt5.QtCore import QThread, pyqtSignal, QTimer
 from DBControll.ConnectDatabase import ConnectDatabase
 from DBControll.AppTable import AppTable
 from DBControll.UserTable import UserTable
-from DBControll.PathTable import PathTable
 from sdn_controller.SetRule import SetRule
 
 '''
