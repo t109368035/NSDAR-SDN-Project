@@ -85,8 +85,12 @@ class Get_Live_Flow(QThread):
             self.dict_user_to_server[client_ip] = list()
         user_info = UserTable().pop_user_info(user_ip=client_ip)
         ap = user_info['user_ap']
-        if server_ip == '10.10.3.200' and '10.10.3.200' not in self.dict_user_to_server[client_ip]:
+        if server_ip == '10.10.3.100' and '10.10.3.100' not in self.dict_user_to_server[client_ip]:
             self.dict_user_to_server[client_ip].append(server_ip)
             app_type = 'Mission'
+            SetRule().excute(user_ip=client_ip, ap=ap, app_type=app_type, server_ip=server_ip)
+        elif server_ip == '192.168.1.143' and '192.168.1.143' not in self.dict_user_to_server[client_ip]:
+            self.dict_user_to_server[client_ip].append(server_ip)
+            app_type = 'Massive'
             SetRule().excute(user_ip=client_ip, ap=ap, app_type=app_type, server_ip=server_ip)
             
