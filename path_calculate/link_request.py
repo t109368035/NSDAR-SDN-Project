@@ -24,7 +24,7 @@ class LinkRequest(QThread):
         self.client.publish(topic, data)
 
     def run(self):
-        for i in range(1,13):
+        for i in reversed(range(1,13)):
             self.publish('info_request', 'test{}'.format(i))
             time.sleep(4)
         print("link collect already done.")

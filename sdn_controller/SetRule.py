@@ -44,7 +44,7 @@ class SetRule:
             if not re_add:
                 RuleTable().insert_a_rule(AP=ap, app_type=app_type, user_ip=user_ip, user_rule=rule, node_name=node_name)
 
-    def excute(self,user_ip,ap,app_type,server_ip=None):
+    def excute(self,user_ip,ap,app_type,server_ip=None,server_port=None):
         rule = list()
         user_info = UserTable().pop_user_info(user_ip)
         path_info = PathTable().pop_AP_type_path(ap, app_type) 

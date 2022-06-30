@@ -20,7 +20,7 @@ class GetPath:
                                     path=str(path).replace('\'','"'), vlan=self.vlan_dict[ap][btype])
 
     def get_APP_path(self):
-        for btype in ['Mission', 'Mobile', 'Massive']:
+        for btype in ['Massive', 'Mobile', 'Mission']:
             for ap in ['map15', 'map5']:
                 graph = Graph(LinkTable().pop_ETT())
                 path = graph.dijkstra(ap, 'out')
@@ -50,11 +50,11 @@ class GetPath:
 
     def get_btype_bandwidth(self, btype):
         if btype is 'Mission':#設定每種應用類型使用的頻寬
-            use = 25000000
+            use = 20000000
         elif btype is 'Mobile':
-            use = 15000000
+            use = 10000000
         elif btype is 'Massive':
-            use = 5000000
+            use = 4000000
         return use
     
     def dict_of_vlan(self):

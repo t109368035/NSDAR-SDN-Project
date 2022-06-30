@@ -57,12 +57,13 @@ class Get_Live_Flow(QThread):
                     client_ip = flow['client']['ip']
                     Layer7 = flow['protocol']['l7']
                     server_ip = flow['server']['ip']
+                    server_port = flow['server']['port']
                     if user == client_ip:
                         AppTable().insert_a_app(ap ,store_time, user,flow['client']['port'],flow['server']['name'],
-                                                server_ip,flow['server']['port'],flow['protocol']['l4'], 
+                                                server_ip,server_port,flow['protocol']['l4'], 
                                                 Layer7, flow['first_seen'], flow['last_seen'],flow['duration'], flow['bytes'])
                         check_user_list.add(user)
-                        self.determin_service(server_ip=server_ip, client_ip=client_ip)
+                        self.determin_service(client_ip=client_ip,server_ip=server_ip)
             self.delete_user(user_list, check_user_list)
         elif not user_list and flow_list:
             self.ftimer.stop()
@@ -80,17 +81,22 @@ class Get_Live_Flow(QThread):
         if delete_user:
             self.user_table_fresh.emit(delete_user)
 
-    def determin_service(self, server_ip, client_ip):
+    def determin_service(self, client_ip, server_ip):
         if not self.dict_user_to_server.get(client_ip):
             self.dict_user_to_server[client_ip] = list()
         user_info = UserTable().pop_user_info(user_ip=client_ip)
         ap = user_info['user_ap']
-        if server_ip == '10.10.3.100' and '10.10.3.100' not in self.dict_user_to_server[client_ip]:
+        if server_ip == '192.168.1.230' and server_ip not in self.dict_user_to_server[client_ip]:
             self.dict_user_to_server[client_ip].append(server_ip)
             app_type = 'Mission'
             SetRule().excute(user_ip=client_ip, ap=ap, app_type=app_type, server_ip=server_ip)
-        elif server_ip == '192.168.1.143' and '192.168.1.143' not in self.dict_user_to_server[client_ip]:
+        elif server_ip == '192.168.1.185' and server_ip not in self.dict_user_to_server[client_ip]:
+            self.dict_user_to_server[client_ip].append(server_ip)
+            app_type = 'Mobile'
+            SetRule().excute(user_ip=client_ip, ap=ap, app_type=app_type, server_ip=server_ip)
+        elif server_ip == '192.168.1.144' and server_ip not in self.dict_user_to_server[client_ip]:
             self.dict_user_to_server[client_ip].append(server_ip)
             app_type = 'Massive'
             SetRule().excute(user_ip=client_ip, ap=ap, app_type=app_type, server_ip=server_ip)
             
+                    

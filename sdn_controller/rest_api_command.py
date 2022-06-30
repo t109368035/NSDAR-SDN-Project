@@ -16,7 +16,7 @@ class GenerateRule:
         else:
             self.server_ip['dst'] = ''
             self.server_ip['src'] = ''
-
+        
     def map(self):
         table1_push_vlan = '{{"dpid":{},"cookie":{},"table_id":1,"priority":{},"match":{{"ipv4_src":"{}"{},"eth_type":2048}},"actions":[{{"type":"PUSH_VLAN","ethertype":33024}},{{"type":"SET_FIELD","field":"vlan_vid","value":{}}},{{"type":"GOTO_TABLE","table_id":3}}]}}'.format(self.node_info['node_dpid'], self.cookie, self.priority, self.user_info['user_ip'], self.server_ip['dst'], self.vlan_vid)
         table4_to_device = '{{"dpid":{},"cookie":{},"table_id":4,"priority":{},"match":{{"ipv4_dst":"{}","eth_type":2048,"eth_dst":"{}","eth_src":"{}"}},"actions":[{{"type":"SET_FIELD","field":"eth_src","value":"{}"}},{{"type":"SET_FIELD","field":"eth_dst","value":"{}"}},{{"type":"OUTPUT","port":3}}]}}'.format(self.node_info['node_dpid'], self.cookie, self.priority, self.user_info['user_ip'], self.node_info['node_mac'], self.next_node_info['node_mac'], self.node_info['node_mac'], self.user_info['user_mac'])
