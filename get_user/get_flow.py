@@ -23,6 +23,13 @@ class Get_Live_Flow(QThread):
     def run(self):
         print('\n\n===========\nstart getflow{} : {}\n===========\n\n'.format(self.node, time.ctime()))
 
+    """
+    取得flow的throughput
+    """
+    
+    """
+    取得flow的應用類型等資訊
+    """
     def row_data_proccess(self, raw_data):
         try:
             raw_data = raw_data.decode('utf-8')
@@ -86,15 +93,15 @@ class Get_Live_Flow(QThread):
             self.dict_user_to_server[client_ip] = list()
         user_info = UserTable().pop_user_info(user_ip=client_ip)
         ap = user_info['user_ap']
-        if server_ip == '192.168.1.230' and server_ip not in self.dict_user_to_server[client_ip]:
+        if server_ip == '192.168.1.241' and server_ip not in self.dict_user_to_server[client_ip]:
             self.dict_user_to_server[client_ip].append(server_ip)
             app_type = 'Mission'
             SetRule().excute(user_ip=client_ip, ap=ap, app_type=app_type, server_ip=server_ip)
-        elif server_ip == '192.168.1.185' and server_ip not in self.dict_user_to_server[client_ip]:
+        elif server_ip == '192.168.1.171' and server_ip not in self.dict_user_to_server[client_ip]:
             self.dict_user_to_server[client_ip].append(server_ip)
             app_type = 'Mobile'
             SetRule().excute(user_ip=client_ip, ap=ap, app_type=app_type, server_ip=server_ip)
-        elif server_ip == '192.168.1.144' and server_ip not in self.dict_user_to_server[client_ip]:
+        elif server_ip == '192.168.1.140' and server_ip not in self.dict_user_to_server[client_ip]:
             self.dict_user_to_server[client_ip].append(server_ip)
             app_type = 'Massive'
             SetRule().excute(user_ip=client_ip, ap=ap, app_type=app_type, server_ip=server_ip)

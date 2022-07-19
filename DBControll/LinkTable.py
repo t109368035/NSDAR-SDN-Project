@@ -20,6 +20,16 @@ class LinkTable:
         packetsize = 12112
         return [(row['start_node'], row['end_node'], row['ETX']*(packetsize/row['bandwidth'])) for row in record_from_db]
     
+    def pop_all_link(self):
+        command = "SELECT * FROM link_table;"
+
+        with DBConnection() as connection:
+            cursor = connection.cursor()
+            cursor.execute(command)
+            record_from_db = cursor.fetchall()
+        
+        return [[row['start_node'], row['end_node'], row['bandwidth'], row['ETX']] for row in record_from_db]
+
     def delete_link(self, start_node, end_node):
         command = "DELETE FROM link_table WHERE start_node='{}' AND end_node='{}';".format(start_node, end_node)
 
@@ -68,6 +78,25 @@ class LinkTable:
             cursor.execute(command)
             record_from_db = cursor.fetchone()
         return record_from_db['bandwidth']
+    
+    def pop_ETX(self, start_node, end_node):
+        command = "SELECT * FROM link_table WHERE start_node='{}' AND end_node='{}';".format(start_node, end_node)
+
+        with DBConnection() as connection:
+            cursor = connection.cursor()
+            cursor.execute(command)
+            record_from_db = cursor.fetchone()
+        return record_from_db['ETX']
+    
+    def pop_ETT_single(self, start_node, end_node):
+        command = "SELECT * FROM link_table WHERE start_node='{}' AND end_node='{}';".format(start_node, end_node)
+
+        with DBConnection() as connection:
+            cursor = connection.cursor()
+            cursor.execute(command)
+            record_from_db = cursor.fetchone()
+        packetsize = 12112
+        return record_from_db['ETX']*(packetsize/record_from_db['bandwidth'])
 
     def delete_all(self):
         command = "DELETE FROM link_table;"

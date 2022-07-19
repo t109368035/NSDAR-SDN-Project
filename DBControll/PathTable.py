@@ -16,7 +16,10 @@ class PathTable:
             cursor = connection.cursor()
             cursor.execute(command)
             record_from_db = cursor.fetchone()
-        return {'path': record_from_db['path'], 'vlan': record_from_db['vlan']}
+        try:
+            return {'path': record_from_db['path'], 'vlan': record_from_db['vlan']}
+        except:
+            return None
     
     def pop_AP_path(self, AP):
         command = "SELECT * FROM path_table WHERE AP='{}';".format(AP)

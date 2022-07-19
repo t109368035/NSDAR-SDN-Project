@@ -28,7 +28,7 @@ class Mainapp:
         except:
             SetRule().delete_rule(action='all')
             NodeTable().delete_all()
-            LinkTable().delete_all()
+            #LinkTable().delete_all()
             UserTable().delete_all()
             PathTable().delete_all()
             AppTable().delete_all()

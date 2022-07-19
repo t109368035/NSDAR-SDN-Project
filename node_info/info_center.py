@@ -35,6 +35,7 @@ class NodeINFO(QThread):
     def on_message(self, client, userdata, msg):
         data = json.loads(msg.payload)
         if data.get('dpidinfo'):
+            print(data)
             self.add_node(data)
         elif data.get('chquality'):
             print(data)
@@ -72,9 +73,10 @@ class NodeINFO(QThread):
                                 bandwidth=data['bandwidth'], ETX=data['etx'])#bandwidth需要除役以2嗎?因為會掉包
         if self.link_count == 12:
             self.link_count = 0
-            GetPath().get_APP_path()
-            GetPath().get_normal_path()
-
+            print("get all link")
+            #GetPath().get_APP_path()
+            #GetPath().get_remain_path()
+            #GetPath().get_NSRSDN_path()
     def run(self):
         self.subscribe()
     

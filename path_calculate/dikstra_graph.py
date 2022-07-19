@@ -93,5 +93,8 @@ class Graph:
         if path:
             path.appendleft(current_vertex)
         
-        path.pop()
-        return list(path)
+        try:
+            path.pop()
+            return list(path)
+        except:
+            return None
