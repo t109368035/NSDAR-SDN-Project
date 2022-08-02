@@ -1,35 +1,41 @@
+from platform import node
 import subprocess, time
 from PyQt5.QtCore import QThread, pyqtSignal, QTimer
 from DBControll.ConnectDatabase import ConnectDatabase
 from DBControll.AppTable import AppTable
 from DBControll.UserTable import UserTable
+from DBControll.NodeTable import NodeTable
 from sdn_controller.SetRule import SetRule
+from sdn_controller.rest_api_command import RetrieveSwitchStats
 
-'''
-擷取在map的live flow
-'''
 class Get_Live_Flow(QThread):
     user_table_fresh = pyqtSignal(list)
     stop_getflow = pyqtSignal(str)
     def __init__(self, node):
         super().__init__()
-        self.node = node
         ConnectDatabase()
+        self.node = node
+        self.p_byte = 0
+        self.dpid = NodeTable().pop_node_info(node_name='map{}'.format(self.node))['node_dpid']
         self.ftimer = QTimer(self)
         self.ftimer.timeout.connect(self.store_user_flow)
         self.ftimer.start(20000)
+        self.ctimer = QTimer(self)
+        self.ctimer.timeout.connect(self.check_flow_bitrate)
+        self.ctimer.start(20000)
         self.dict_user_to_server = dict()
     
     def run(self):
         print('\n\n===========\nstart getflow{} : {}\n===========\n\n'.format(self.node, time.ctime()))
-
-    """
-    取得flow的throughput
-    """
+        print('get flow dpid:{}'.format(self.dpid))
     
-    """
-    取得flow的應用類型等資訊
-    """
+    def check_flow_bitrate(self):
+        bitrate, byte_count = RetrieveSwitchStats(dpid=self.dpid).get_Mission_flow_bitrate(node=self.node,p_byte=self.p_byte)
+        self.p_byte = byte_count
+        print('map{} Mission flow bitrate = {}'.format(self.node, bitrate))
+        if bitrate > 20:
+            print("========\nMission flow exceed 20Mbps\npress collect ETT\n========")
+
     def row_data_proccess(self, raw_data):
         try:
             raw_data = raw_data.decode('utf-8')
@@ -74,10 +80,12 @@ class Get_Live_Flow(QThread):
             self.delete_user(user_list, check_user_list)
         elif not user_list and flow_list:
             self.ftimer.stop()
+            self.ctimer.stop()
             self.stop_getflow.emit('{} stop'.format(ap))
         elif user_list and not flow_list:
             print('\n\n\n==============\nntop出問題了 : {}\n==============\n\n\n'.format(store_time))
             self.ftimer.stop()
+            self.ctimer.stop()
             self.stop_getflow.emit('{} stop'.format(ap))
 
     def delete_user(self, original_user_list, check_user_list):

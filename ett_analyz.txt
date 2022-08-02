@@ -1,0 +1,17 @@
+('Mission', 'Mobile', 'Massive', 'normal'): 0.019622047117794486
+('Mission', 'Mobile', 'normal', 'Massive'): 0.02633345837320574
+('Mission', 'Massive', 'Mobile', 'normal'): 0.01917858716356108
+('Mission', 'normal', 'Mobile', 'Massive'): 0.025577934006734006
+('Mobile', 'Mission', 'Massive', 'normal'): 0.01962204711779449
+('Mobile', 'Mission', 'normal', 'Massive'): 0.026333458373205745
+('Mobile', 'Massive', 'Mission', 'normal'): 0.02521002648914777
+('Mobile', 'normal', 'Mission', 'Massive'): 0.018186550821498188
+('Massive', 'Mission', 'Mobile', 'normal'): 0.01917858716356108
+('Massive', 'Mobile', 'Mission', 'normal'): 0.02521002648914777
+('Massive', 'normal', 'Mission', 'Mobile'): 0.01774309086726478
+('Massive', 'normal', 'Mobile', 'Mission'): 0.02445450212267604
+('normal', 'Mission', 'Mobile', 'Massive'): 0.02557793400673401
+('normal', 'Mobile', 'Mission', 'Massive'): 0.01818655082149819
+('normal', 'Massive', 'Mission', 'Mobile'): 0.01774309086726478
+('normal', 'Massive', 'Mobile', 'Mission'): 0.02445450212267604
+NSRSDN: 48448.01270090426

@@ -20,6 +20,16 @@ class LinkTable:
         packetsize = 12112
         return [(row['start_node'], row['end_node'], row['ETX']*(packetsize/row['bandwidth'])) for row in record_from_db]
     
+    def pop_ETX(self):
+        command = "SELECT * FROM link_table;"
+
+        with DBConnection() as connection:
+            cursor = connection.cursor()
+            cursor.execute(command)
+            record_from_db = cursor.fetchall()
+
+        return [(row['start_node'], row['end_node'], row['ETX']) for row in record_from_db]
+
     def pop_all_link(self):
         command = "SELECT * FROM link_table;"
 
@@ -40,6 +50,14 @@ class LinkTable:
 
     def modify_bandwidth(self, start_node, end_node, bandwidth):
         command = "UPDATE link_table SET bandwidth='{}' WHERE start_node='{}' AND end_node='{}';".format(bandwidth, start_node, end_node)
+
+        with DBConnection() as connection:
+            cursor = connection.cursor()
+            cursor.execute(command)
+            connection.commit()
+
+    def modify_ETX(self, start_node, end_node, ETX):
+        command = "UPDATE link_table SET ETX='{}' WHERE start_node='{}' AND end_node='{}';".format(ETX, start_node, end_node)
 
         with DBConnection() as connection:
             cursor = connection.cursor()
@@ -79,7 +97,7 @@ class LinkTable:
             record_from_db = cursor.fetchone()
         return record_from_db['bandwidth']
     
-    def pop_ETX(self, start_node, end_node):
+    def pop_uETX(self, start_node, end_node):
         command = "SELECT * FROM link_table WHERE start_node='{}' AND end_node='{}';".format(start_node, end_node)
 
         with DBConnection() as connection:

@@ -103,13 +103,13 @@ class MainWindow(QDialog):
     def check_start_getflow(self, condition):
         if condition == 'map15 start' and self.start_getflow15_flag is False:
             self.start_getflow15_flag = True
-            self.get15flow = Get_Live_Flow('15')
+            self.get15flow = Get_Live_Flow(15)
             self.get15flow.start()
             self.get15flow.user_table_fresh.connect(self.refresh_table_userdata)
             self.get15flow.stop_getflow.connect(self.check_stop_getflow)
         elif condition == 'map5 start' and self.start_getflow05_flag is False:
             self.start_getflow05_flag = True
-            self.get05flow = Get_Live_Flow('5')
+            self.get05flow = Get_Live_Flow(5)
             self.get05flow.start()
             self.get05flow.user_table_fresh.connect(self.refresh_table_userdata)
             self.get05flow.stop_getflow.connect(self.check_stop_getflow)

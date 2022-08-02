@@ -14,7 +14,7 @@ class SetRule:
         ConnectDatabase()
         self.queue_dict = self.dict_of_queue()
 
-    def post_request(self, rule,  action):
+    def post_request(self, rule, action):
         print('get in post request')
         url = "http://127.0.0.1:8080/stats/flowentry/"+action
         headers = {'Content-Type': 'text/plain'}
@@ -33,7 +33,7 @@ class SetRule:
                 self.rule = rule
                 self.post_request(rule, 'delete')
             RuleTable().delete_all()
-        if action == 'single user':
+        elif action == 'single user':
             for rule in RuleTable().pop_user_rule(ip):
                 self.rule = rule
                 self.post_request(rule, 'delete')
