@@ -1,4 +1,5 @@
 import re
+import itertools
 from DBControll.ConnectDatabase import ConnectDatabase
 from DBControll.LinkTable import LinkTable
 from DBControll.PathTable import PathTable
@@ -37,7 +38,7 @@ class GetPath:
                                 total_ett = total_ett + ett
         return total_ett
 
-    def excute_ETT_all_sequency(self, sequency_r):
+    def excute_ETT_any_sequency(self, sequency_r):
         total_ett = 0
         for btype in sequency_r:
             for ap in ['map15', 'map5']:
@@ -69,7 +70,6 @@ class GetPath:
                                             path=str(path).replace('\'','"'), vlan=self.vlan_dict[ap]['normal'])
                     PathTable().insert_path(AP=ap.replace('\'','"'), app_type='Massive',
                                             path=str(path).replace('\'','"'), vlan=self.vlan_dict[ap]['Massive'])
-                
 
     def get_remain_path(self):
         Missionpath15 = str(['map15','map16','mp56','mp55','mpp98']).replace('\'','"')
@@ -81,8 +81,29 @@ class GetPath:
         PathTable().insert_path(AP='map5', app_type='Mission',path=Missionpath5, vlan=8)
         PathTable().insert_path(AP='map5', app_type='normal',path=Normalpath5, vlan=5)
     
-    def get_APP_path_ETT(self):
-        for btype in reversed(['Massive', 'normal', 'Mobile', 'Mission']):
+    def excute_optimize(self):
+        sque = ['Mission', 'Mobile', 'Massive', 'normal']
+        all_Q_sequence = list(itertools.permutations(sque))
+        original_link = LinkTable().pop_all_link()
+        ett_list = list()
+        ett_dict = dict()
+        for Q in all_Q_sequence:
+            ett = self.excute_ETT_any_sequency(Q)
+            LinkTable().delete_all()
+            for link in original_link:
+                LinkTable().insert_link(start_node=link[0], end_node=link[1],
+                                        bandwidth=link[2], ETX=link[3])
+            if ett:
+                ett_list.append(ett)
+                ett_dict[ett] = Q
+        sorted_ett_list = sorted(ett_list)
+        min_ett = sorted_ett_list[0]
+        min_ett_sque = ett_dict[min_ett]
+        print("minimun ETT Q_sequence : {}".format(min_ett_sque))
+        self.get_APP_path_ETT(Q_sequence=min_ett_sque)
+    
+    def get_APP_path_ETT(self, Q_sequence = ['Mission', 'Mobile', 'Massive', 'normal']):
+        for btype in Q_sequence:
             for ap in ['map5', 'map15']:
                 graph = Graph(LinkTable().pop_ETT())
                 path = graph.dijkstra(ap, 'out')
@@ -133,12 +154,12 @@ class GetPath:
 
     def get_btype_bandwidth(self, btype):
         if btype is 'Mission':
-            use = 10000000
+            use = 20000000
         elif btype is 'Mobile':
-            use = 10000000
-        elif btype is 'normal':
-            use = 10000000
+            use = 6000000
         elif btype is 'Massive':
+            use = 4000000
+        elif btype is 'normal':
             use = 10000000
         return use
     

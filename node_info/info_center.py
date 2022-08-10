@@ -74,6 +74,7 @@ class NodeINFO(QThread):
         if self.link_count == 12:
             self.link_count = 0
             print("get all link")
+            #GetPath().excute_optimize()
             #GetPath().get_APP_path_ETX()
             GetPath().get_APP_path_ETT()
             #GetPath().get_remain_path()
