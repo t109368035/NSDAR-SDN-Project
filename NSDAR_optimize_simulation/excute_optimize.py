@@ -1,7 +1,11 @@
-import itertools
+import os, sys, itertools
+sub_path = os.path.abspath(os.getcwd())
+path = sub_path.replace('NSDAR_optimize_simulation', '')
+sys.path.insert(0, path)
 from DBControll.ConnectDatabase import ConnectDatabase
 from DBControll.LinkTable import LinkTable
 from path_calculate.get_path import GetPath
+os.chdir(path)
 
 ConnectDatabase()
 original_link = LinkTable().pop_all_link()

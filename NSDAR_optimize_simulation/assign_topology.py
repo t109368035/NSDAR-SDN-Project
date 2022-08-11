@@ -1,5 +1,10 @@
+import os, sys
+sub_path = os.path.abspath(os.getcwd())
+path = sub_path.replace('NSDAR_optimize_simulation', '')
+sys.path.insert(0, path)
 from DBControll.ConnectDatabase import ConnectDatabase
 from DBControll.LinkTable import LinkTable
+os.chdir(path)
 
 ConnectDatabase()
 #1

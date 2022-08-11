@@ -156,11 +156,11 @@ class GetPath:
         if btype is 'Mission':
             use = 20000000
         elif btype is 'Mobile':
-            use = 6000000
-        elif btype is 'Massive':
-            use = 4000000
-        elif btype is 'normal':
             use = 10000000
+        elif btype is 'Massive':
+            use = 6000000
+        elif btype is 'normal':
+            use = 4000000
         return use
     
     def get_btype_ETX(self, uetx):
