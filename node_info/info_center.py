@@ -1,4 +1,3 @@
-#尚未完成收到節點資訊後，處理的程序。
 import paho.mqtt.client as mqtt
 import json
 from PyQt5.QtCore import QThread, pyqtSignal, QTimer
@@ -70,7 +69,7 @@ class NodeINFO(QThread):
     def add_link(self, data):
         self.link_count+=1
         LinkTable().insert_link(start_node=data['start'], end_node=data['end'],
-                                bandwidth=data['bandwidth'], ETX=data['etx'])#bandwidth需要除役以2嗎?因為會掉包
+                                bandwidth=data['bandwidth'], ETX=data['etx'])
         if self.link_count == 12:
             self.link_count = 0
             print("get all link")

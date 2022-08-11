@@ -131,17 +131,16 @@ class GetPath:
                     original_bandwidth = LinkTable().pop_bandwidth(start_node=link[0], end_node=link[1])
                     bandwidth = original_bandwidth - self.get_btype_bandwidth(btype)
                     if bandwidth<=0:
-                        #LinkTable().delete_link(start_node=link[0],end_node=link[1])
                         LinkTable().modify_bandwidth(start_node=link[0], end_node=link[1], bandwidth=1)
                     else:
                         LinkTable().modify_bandwidth(start_node=link[0], end_node=link[1], bandwidth=bandwidth)
     
     def add_use_etx(self,path,btype):
-        for i in range(0,len(path)-1): #拿出目前節點以及下一個節點
+        for i in range(0,len(path)-1): 
             c_node = int(re.search('\d+$',path[i]).group())
             n_node = int(re.search('\d+$',path[i+1]).group())
-            if not abs(n_node - c_node) == 1: #取出無線link
-                for link in self.get_link_have_related(path[i], path[i+1]): #取出受到影響所有link                    
+            if not abs(n_node - c_node) == 1:
+                for link in self.get_link_have_related(path[i], path[i+1]):                   
                     original_etx = LinkTable().pop_uETX(start_node=link[0], end_node=link[1])
                     etx = original_etx + self.get_btype_ETX(btype)
                     LinkTable().modify_ETX(start_node=link[0], end_node=link[1], ETX=etx)
@@ -149,7 +148,6 @@ class GetPath:
     def get_link_have_related(self, c_node, n_node):
         all_link = LinkTable().pop_link_end_with(end_node=c_node) + LinkTable().pop_link_start_with(start_node=c_node) + LinkTable().pop_link_end_with(end_node=n_node) + LinkTable().pop_link_start_with(start_node=n_node)
         all_link.remove([c_node,n_node])
-        #print(all_link)
         return all_link
 
     def get_btype_bandwidth(self, btype):

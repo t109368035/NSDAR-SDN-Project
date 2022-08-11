@@ -130,7 +130,7 @@ class MainWindow(QDialog):
         if user_list:
             row=0
             self.tableWidget_userdata.setRowCount(len(user_list))
-            sort_IP = sorted(user_list)#按照順序排序
+            sort_IP = sorted(user_list)
             for IP in sort_IP:
                 user_info = UserTable().pop_user_info(IP)
                 IP = QtWidgets.QTableWidgetItem(user_info['user_ip'])
@@ -168,7 +168,7 @@ class MainWindow(QDialog):
         if node_list:
             self.tableWidget_nodeinfo.setRowCount(len(node_list))
             row=0
-            sort_dpid = sorted(node_list)#按照順序排序
+            sort_dpid = sorted(node_list)
             for node_ID in sort_dpid:
                 node_info = NodeTable().pop_node_info(node_ID)
                 node_name = QtWidgets.QTableWidgetItem(node_info['node_name'])

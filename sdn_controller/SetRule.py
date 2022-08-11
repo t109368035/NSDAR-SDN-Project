@@ -28,7 +28,7 @@ class SetRule:
 
     def delete_rule(self, action='all', ip=None):
         self.action = 'delete'
-        if action == 'all':#改成全刪
+        if action == 'all':
             for rule in RuleTable().pop_all_rule():
                 self.rule = rule
                 self.post_request(rule, 'delete')

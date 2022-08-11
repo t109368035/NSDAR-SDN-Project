@@ -28,7 +28,7 @@ class GenerateRule:
         table3_to_node = '{{"dpid":{},"cookie":{},"table_id":3,"priority":{},"match":{{"dl_vlan": {}}},"actions":[{{"type":"SET_FIELD","field":"eth_src","value":"{}"}},{{"type":"SET_FIELD","field":"eth_dst","value":"{}"}},{{"type":"SET_QUEUE","queue_id":{}}},{{"type":"OUTPUT","port":{}}}]}}'.format(self.node_info['node_dpid'], self.cookie, self.priority, self.vlan_vid, self.node_info['node_mac'],  self.next_node_info['node_mac'], self.queue_id, self.port)
         return [table3_to_node]
 
-    def mp(self): ##output port 選擇
+    def mp(self): 
         table0_to_next_node = '{{"dpid":{},"cookie":{},"table_id":0,"priority":{},"match":{{"dl_vlan":{},"eth_src": "{}","eth_dst": "{}"}},"actions":[{{"type":"SET_FIELD","field":"eth_src","value":"{}"}},{{"type":"SET_FIELD","field":"eth_dst","value":"{}"}},{{"type":"OUTPUT","port":{}}}]}}'.format(self.node_info['node_dpid'], self.cookie, self.priority, self.vlan_vid, self.previous_node_info['node_mac'], self.node_info['node_mac'], self.node_info['node_mac'], self.next_node_info['node_mac'], self.port[0])
         table0_to_previous_node = '{{"dpid":{},"cookie":{},"table_id":0,"priority":{},"match":{{"dl_vlan":{},"eth_src": "{}","eth_dst": "{}"}},"actions":[{{"type":"SET_FIELD","field":"eth_src","value":"{}"}},{{"type":"SET_FIELD","field":"eth_dst","value":"{}"}},{{"type":"OUTPUT","port":{}}}]}}'.format(self.node_info['node_dpid'], self.cookie, self.priority, self.vlan_vid, self.next_node_info['node_mac'], self.node_info['node_mac'], self.node_info['node_mac'], self.previous_node_info['node_mac'], self.port[1])
         return [table0_to_next_node, table0_to_previous_node]
@@ -50,7 +50,6 @@ class RetrieveSwitchStats:
         url = "http://127.0.0.1:8080/stats/flow/"+self.dpid
         match = '{{"table_id":3,"cookie":{},"cookie_mask":{}}}'.format(node+3, node+3)
         flow_info = eval(self.post_request(url, match))[self.dpid]
-        #print(flow_info)
         if not flow_info:
             return 0, 0
         else:
