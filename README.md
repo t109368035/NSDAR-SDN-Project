@@ -44,6 +44,10 @@
 - 節點組成 : 兩個樹梅派連接--結合OLSR以及OVS  
 - 使用Wi-Fi頻段 : 2.4GHz以及5GHz  
 
+**網路架構展示表**
+
+<img src="./image/node_structure.png" width="500">
+
 ### 實驗控制器架構
 <img src="./image/network_manager_structure.jpg">
 
@@ -71,7 +75,7 @@
   - 避免重複制定一樣的路由規則  
 
 ### 網路切片設計
-<img src="./image/network_slice_design.jpg">
+<img src="./image/network_slice_design.jpg" width="500">
 
 **網路切片設計說明**
 - Mission-critical IoT  
