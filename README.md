@@ -59,6 +59,11 @@
   - 收集、紀錄網路節點上各種資訊。  
 - Client Manager： [[get_user](get_user)]
   - 管理網路中的客戶端，為客戶端使用的不同網路流分配網路切片。  
+  
+**MQTT Broker設定**
+```
+allow_anonymous true
+```
 
 ### NSDAR-SDN演算法說明
 <img src="./image/network_slice_simulate.jpg" width="500">
