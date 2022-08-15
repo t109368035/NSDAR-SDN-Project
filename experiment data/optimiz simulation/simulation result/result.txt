@@ -1,0 +1,138 @@
+**************
+*experiment-1*
+**************
+total path: 24
+not available path: 4
+NSDAR-SDN rank: 7
+NSDAR-SDN: 0.007569999999999999
+total ETT small than NSDAR-SDN:
+(‘Mission’, ‘Mobile’, ‘Massive’, ‘normal’): 0.007569999999999999
+(‘Mission’, ‘Massive’, ‘Mobile’, ‘normal’): 0.0072904923076923065
+(‘Mission’, ‘Massive’, ‘normal’, ‘Mobile’): 0.006987692307692304
+(‘Mission’, ‘normal’, ‘Massive’, ‘Mobile’): 0.0070653333333333315
+(‘Massive’, ‘Mission’, ‘Mobile’, ‘normal’): 0.0072904923076923065
+(‘Massive’, ‘Mission’, ‘normal’, ‘Mobile’): 0.006987692307692306
+(‘normal’, ‘Mission’, ‘Massive’, ‘Mobile’): 0.0070653333333333315
+total ETT greater than NSDAR-SDN:
+(‘Mission’, ‘Mobile’, ‘normal’, ‘Massive’): 0.007786285714285713
+(‘Mission’, ‘normal’, ‘Mobile’, ‘Massive’): 0.007584419047619048
+(‘Mobile’, ‘Mission’, ‘Massive’, ‘normal’): 0.00757
+(‘Mobile’, ‘Mission’, ‘normal’, ‘Massive’): 0.007786285714285714
+(‘Mobile’, ‘Massive’, ‘Mission’, ‘normal’): 0.007910511355311357
+(‘Mobile’, ‘Massive’, ‘normal’, ‘Mission’): 48448.0033540923
+(‘Mobile’, ‘normal’, ‘Mission’, ‘Massive’): 0.009790533333333334
+(‘Mobile’, ‘normal’, ‘Massive’, ‘Mission’): 48448.003431733334
+(‘Massive’, ‘Mobile’, ‘Mission’, ‘normal’): 0.007910511355311357
+(‘Massive’, ‘Mobile’, ‘normal’, ‘Mission’): 48448.0033540923
+(‘Massive’, ‘normal’, ‘Mission’, ‘Mobile’): 0.0077086446886446905
+(‘Massive’, ‘normal’, ‘Mobile’, ‘Mission’): 0.00951102564102564
+(‘normal’, ‘Mission’, ‘Mobile’, ‘Massive’): 0.007584419047619046
+(‘normal’, ‘Mobile’, ‘Mission’, ‘Massive’): 0.009790533333333334
+(‘normal’, ‘Mobile’, ‘Massive’, ‘Mission’): 48448.003431733334
+(‘normal’, ‘Massive’, ‘Mission’, ‘Mobile’): 0.0077086446886446905
+(‘normal’, ‘Massive’, ‘Mobile’, ‘Mission’): 0.00951102564102564
+
+
+**************
+*experiment-2*
+**************
+total path: 24
+not available path: 4
+NSDAR-SDN rank: 3
+NSDAR-SDN: 0.0071755096459096435
+total ETT small than NSDAR-SDN:
+(‘Mission’, ‘Mobile’, ‘Massive’, ‘normal’): 0.0071755096459096435
+(‘Mission’, ‘Massive’, ‘Mobile’, ‘normal’): 0.00694019426847662
+(‘normal’, ‘Mobile’, ‘Massive’, ‘Mission’): 0.005939335646692488
+total ETT greater than NSDAR-SDN:
+(‘Mission’, ‘Mobile’, ‘normal’, ‘Massive’): 0.007491132178932179
+(‘Mission’, ‘Massive’, ‘normal’, ‘Mobile’): 0.007223791608391608
+(‘Mission’, ‘normal’, ‘Mobile’, ‘Massive’): 0.008918180952380951
+(‘Mission’, ‘normal’, ‘Massive’, ‘Mobile’): 0.008320622344322345
+(‘Mobile’, ‘Mission’, ‘Massive’, ‘normal’): 0.007381338878597461
+(‘Mobile’, ‘Mission’, ‘normal’, ‘Massive’): 0.008208857590339944
+(‘Mobile’, ‘Massive’, ‘Mission’, ‘normal’): 0.0082583328233763
+(‘Mobile’, ‘Massive’, ‘normal’, ‘Mission’): 0.015098854164779995
+(‘Mobile’, ‘normal’, ‘Mission’, ‘Massive’): 0.013909165012329716
+(‘Mobile’, ‘normal’, ‘Massive’, ‘Mission’): 24224.00801690788
+(‘Massive’, ‘Mission’, ‘Mobile’, ‘normal’): 0.0073138014208014215
+(‘Massive’, ‘Mission’, ‘normal’, ‘Mobile’): 0.007622500122100124
+(‘Massive’, ‘Mobile’, ‘Mission’, ‘normal’): 0.008117772560772563
+(‘Massive’, ‘Mobile’, ‘normal’, ‘Mission’): 0.012563645576645575
+(‘Massive’, ‘normal’, ‘Mission’, ‘Mobile’): 0.008341049328449328
+(‘Massive’, ‘normal’, ‘Mobile’, ‘Mission’): 12112.007633423642
+(‘normal’, ‘Mission’, ‘Mobile’, ‘Massive’): 0.008596804509992931
+(‘normal’, ‘Mission’, ‘Massive’, ‘Mobile’): 0.008141360544945249
+(‘normal’, ‘Mobile’, ‘Mission’, ‘Massive’): 12112.008207932471
+(‘normal’, ‘Massive’, ‘Mission’, ‘Mobile’): 0.007316554148074149
+(‘normal’, ‘Massive’, ‘Mobile’, ‘Mission’): 24224.00940600523
+
+
+**************
+*experiment-3*
+**************
+total path: 24
+not available path: 9
+NSDAR-SDN rank: 6
+NSDAR-SDN: 0.008869562124379532
+total ETT small than NSDAR-SDN:
+(‘Mission’, ‘Mobile’, ‘Massive’, ‘normal’): 0.008869562124379532
+(‘Mission’, ‘Massive’, ‘Mobile’, ‘normal’): 0.008407015848658255
+(‘Mission’, ‘Massive’, ‘normal’, ‘Mobile’): 0.008515307772575482
+(‘Mission’, ‘normal’, ‘Mobile’, ‘Massive’): 0.00850444060638696
+(‘Mission’, ‘normal’, ‘Massive’, ‘Mobile’): 0.008269756090093783
+(‘Mobile’, ‘Massive’, ‘Mission’, ‘normal’): 0.008138755318067565
+total ETT greater than NSDAR-SDN:
+(‘Mission’, ‘Mobile’, ‘normal’, ‘Massive’): 0.009122119958738578
+(‘Mobile’, ‘Mission’, ‘Massive’, ‘normal’): 12112.007875109688
+(‘Mobile’, ‘Mission’, ‘normal’, ‘Massive’): 12112.007956172705
+(‘Mobile’, ‘Massive’, ‘normal’, ‘Mission’): 24224.00726863286
+(‘Mobile’, ‘normal’, ‘Mission’, ‘Massive’): 12112.008285640799
+(‘Mobile’, ‘normal’, ‘Massive’, ‘Mission’): 24224.00725369617
+(‘Massive’, ‘Mission’, ‘Mobile’, ‘normal’): 0.009528734113290669
+(‘Massive’, ‘Mission’, ‘normal’, ‘Mobile’): 0.009572799747957725
+(‘Massive’, ‘Mobile’, ‘Mission’, ‘normal’): 0.014384786489686203
+(‘Massive’, ‘Mobile’, ‘normal’, ‘Mission’): 12112.007579958403
+(‘Massive’, ‘normal’, ‘Mission’, ‘Mobile’): 0.009584185914990934
+(‘Massive’, ‘normal’, ‘Mobile’, ‘Mission’): 12112.012531822145
+(‘normal’, ‘Mission’, ‘Mobile’, ‘Massive’): 0.010760805926068252
+(‘normal’, ‘Mission’, ‘Massive’, ‘Mobile’): 0.010746201794080715
+(‘normal’, ‘Mobile’, ‘Mission’, ‘Massive’): 0.01080244715071848
+(‘normal’, ‘Mobile’, ‘Massive’, ‘Mission’): 24224.007064502537
+(‘normal’, ‘Massive’, ‘Mission’, ‘Mobile’): 0.010597097390067041
+(‘normal’, ‘Massive’, ‘Mobile’, ‘Mission’): 24224.006925754627
+
+
+**************
+*experiment-4*
+**************
+total path: 24
+not available path: 6
+NSDAR-SDN rank: 2
+NSDAR-SDN: 0.007884381463272853
+total ETT small than NSDAR-SDN:
+(‘Mission’, ‘Mobile’, ‘Massive’, ‘normal’): 0.007884381463272853
+(‘Mission’, ‘Massive’, ‘normal’, ‘Mobile’): 0.007855636299827754
+total ETT greater than NSDAR-SDN:
+(‘Mission’, ‘Mobile’, ‘normal’, ‘Massive’): 0.008107341404618058
+(‘Mission’, ‘Massive’, ‘Mobile’, ‘normal’): 0.008596489439895147
+(‘Mission’, ‘normal’, ‘Mobile’, ‘Massive’): 0.008126053877623272
+(‘Mission’, ‘normal’, ‘Massive’, ‘Mobile’): 0.00817357666147642
+(‘Mobile’, ‘Mission’, ‘Massive’, ‘normal’): 0.008647344985392328
+(‘Mobile’, ‘Mission’, ‘normal’, ‘Massive’): 0.008786387218099384
+(‘Mobile’, ‘Massive’, ‘Mission’, ‘normal’): 0.007915534018547657
+(‘Mobile’, ‘Massive’, ‘normal’, ‘Mission’): 24224.0071444126
+(‘Mobile’, ‘normal’, ‘Mission’, ‘Massive’): 0.010747030376181093
+(‘Mobile’, ‘normal’, ‘Massive’, ‘Mission’): 12112.007237577373
+(‘Massive’, ‘Mission’, ‘Mobile’, ‘normal’): 0.008835292789312504
+(‘Massive’, ‘Mission’, ‘normal’, ‘Mobile’): 0.008668883183044446
+(‘Massive’, ‘Mobile’, ‘Mission’, ‘normal’): 0.009564064315685489
+(‘Massive’, ‘Mobile’, ‘normal’, ‘Mission’): 12112.007074944335
+(‘Massive’, ‘normal’, ‘Mission’, ‘Mobile’): 0.008869048536634932
+(‘Massive’, ‘normal’, ‘Mobile’, ‘Mission’): 12112.007890142704
+(‘normal’, ‘Mission’, ‘Mobile’, ‘Massive’): 0.009126324233636279
+(‘normal’, ‘Mission’, ‘Massive’, ‘Mobile’): 0.008998277606888597
+(‘normal’, ‘Mobile’, ‘Mission’, ‘Massive’): 0.008062682297841892
+(‘normal’, ‘Mobile’, ‘Massive’, ‘Mission’): 24224.00691134642
+(‘normal’, ‘Massive’, ‘Mission’, ‘Mobile’): 0.0079968051255431
+(‘normal’, ‘Massive’, ‘Mobile’, ‘Mission’): 24224.00665723998
