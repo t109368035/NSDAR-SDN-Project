@@ -61,9 +61,12 @@
   - 管理網路中的客戶端，為客戶端使用的不同網路流分配網路切片。  
   
 **MQTT Broker設定**
-```
-allow_anonymous true
-```
+
+- MQTT設定檔案 : [[Configure File](MQTT_Broker_Configure)]
+- 開啟連線許可 : 
+  ```
+  allow_anonymous true
+  ```
 
 ### NSDAR-SDN演算法說明
 <img src="./image/network_slice_simulate.jpg" width="500">
@@ -90,4 +93,4 @@ allow_anonymous true
 - Massive IoT  
   - 在網路環境裡享有4Mbps的頻寬。  
 - Default Path  
-  - 在客戶端進入網路環境時，給予客戶連線上網的預設路由路徑，並且在控制器辨認其網路流應用後，將不同應用的網路流分配到不同的網路切片。  
+  - 在客戶端進入網路環境時，給予客戶連線上網的預設路由路徑，並且在控制器辨認其網路流應用後，將不同應用的網路流分配到不同的網路切片。 
