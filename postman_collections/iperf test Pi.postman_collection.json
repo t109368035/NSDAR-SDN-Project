@@ -1,0 +1,340 @@
+{
+	"info": {
+		"_postman_id": "e9144720-b441-47e9-9b88-c3f2c74f182e",
+		"name": "iperf test Pi",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14365028"
+	},
+	"item": [
+		{
+			"name": "map15",
+			"item": [
+				{
+					"name": "map_transfer_packet_to_mp",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"dpid\": 242606370251124,\r\n    \"table_id\": 0,\r\n    \"priority\": 100,\r\n    \"match\":{\r\n        \"in_port\": \"LOCAL\"\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\": \"SET_FIELD\",\r\n            \"field\": \"eth_dst\",\r\n            \"value\": \"dc:a6:32:1b:29:e2\"\r\n        },\r\n        {\r\n            \"type\": \"OUTPUT\",\r\n            \"port\": 1\r\n        }\r\n    ]\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/stats/flowentry/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"stats",
+								"flowentry",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mp_transfer_packet_to_map",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"dpid\": 242606370251124,\r\n    \"table_id\": 0,\r\n    \"priority\": 100,\r\n    \"match\":{\r\n        \"in_port\": 1,\r\n        \"eth_dst\": \"dc:a6:32:84:e1:74\",\r\n        \"eth_src\": \"dc:a6:32:1b:29:e2\"\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\": \"SET_FIELD\",\r\n            \"field\": \"eth_src\",\r\n            \"value\": \"dc:a6:32:85:0f:d9\"\r\n        },\r\n        {\r\n            \"type\": \"OUTPUT\",\r\n            \"port\": \"LOCAL\"\r\n        }\r\n    ]\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/stats/flowentry/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"stats",
+								"flowentry",
+								"add"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "map16",
+			"item": [
+				{
+					"name": "map_transfer_packet_to_mp",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"dpid\": 242606370260214,\r\n    \"table_id\": 0,\r\n    \"priority\": 100,\r\n    \"match\":{\r\n        \"in_port\": \"LOCAL\"\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\": \"SET_FIELD\",\r\n            \"field\": \"eth_dst\",\r\n            \"value\": \"dc:a6:32:1b:0b:c1\"\r\n        },\r\n        {\r\n            \"type\": \"OUTPUT\",\r\n            \"port\": 1\r\n        }\r\n    ]\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/stats/flowentry/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"stats",
+								"flowentry",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "mp_transfer_packet_to_map",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"dpid\": 242606370260214,\r\n    \"table_id\": 0,\r\n    \"priority\": 100,\r\n    \"match\":{\r\n        \"in_port\": 1,\r\n        \"eth_dst\": \"dc:a6:32:85:04:f6\",\r\n        \"eth_src\": \"dc:a6:32:1b:0b:c1\"\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\": \"SET_FIELD\",\r\n            \"field\": \"eth_src\",\r\n            \"value\": \"dc:a6:32:85:0e:aa\"\r\n        },\r\n        {\r\n            \"type\": \"OUTPUT\",\r\n            \"port\": \"LOCAL\"\r\n        }\r\n    ]\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/stats/flowentry/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"stats",
+								"flowentry",
+								"add"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "mp55",
+			"item": [
+				{
+					"name": "transfer_packet_to_mpp",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"dpid\": 242606363322850,\r\n    \"table_id\": 0,\r\n    \"priority\": 100,\r\n    \"match\":{\r\n        \"in_port\": 1,\r\n        \"eth_src\": \"dc:a6:32:84:e1:74\",\r\n        \"eth_dst\": \"dc:a6:32:1b:29:e2\"\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\": \"SET_FIELD\",\r\n            \"field\": \"eth_src\",\r\n            \"value\": \"dc:a6:32:1b:29:e2\"\r\n        },\r\n        {\r\n            \"type\": \"SET_FIELD\",\r\n            \"field\": \"eth_dst\",\r\n            \"value\": \"dc:a6:32:85:0f:d9\"\r\n        },\r\n        {\r\n            \"type\": \"OUTPUT\",\r\n            \"port\": \"IN_PORT\"\r\n        }\r\n    ]\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/stats/flowentry/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"stats",
+								"flowentry",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "transfer_packet_to_map",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"dpid\": 242606363322850,\r\n    \"table_id\": 0,\r\n    \"priority\": 100,\r\n    \"match\":{\r\n        \"in_port\": 1,\r\n        \"eth_src\": \"dc:a6:32:85:0f:d9\",\r\n        \"eth_dst\": \"dc:a6:32:1b:29:e2\"\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\": \"SET_FIELD\",\r\n            \"field\": \"eth_src\",\r\n            \"value\": \"dc:a6:32:1b:29:e2\"\r\n        },\r\n        {\r\n            \"type\": \"SET_FIELD\",\r\n            \"field\": \"eth_dst\",\r\n            \"value\": \"dc:a6:32:84:e1:74\"\r\n        },\r\n        {\r\n            \"type\": \"OUTPUT\",\r\n            \"port\": \"IN_PORT\"\r\n        }\r\n    ]\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/stats/flowentry/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"stats",
+								"flowentry",
+								"add"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "mp56",
+			"item": [
+				{
+					"name": "transfer_packet_to_mpp",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"dpid\": 242606363315137,\r\n    \"table_id\": 0,\r\n    \"priority\": 100,\r\n    \"match\":{\r\n        \"in_port\": 1,\r\n        \"eth_src\": \"dc:a6:32:85:04:f6\",\r\n        \"eth_dst\": \"dc:a6:32:1b:0b:c1\"\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\": \"SET_FIELD\",\r\n            \"field\": \"eth_src\",\r\n            \"value\": \"dc:a6:32:1b:0b:c1\"\r\n        },\r\n        {\r\n            \"type\": \"SET_FIELD\",\r\n            \"field\": \"eth_dst\",\r\n            \"value\": \"dc:a6:32:85:0e:aa\"\r\n        },\r\n        {\r\n            \"type\": \"OUTPUT\",\r\n            \"port\": \"IN_PORT\"\r\n        }\r\n    ]\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/stats/flowentry/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"stats",
+								"flowentry",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "transfer_packet_to_map",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"dpid\": 242606363315137,\r\n    \"table_id\": 0,\r\n    \"priority\": 100,\r\n    \"match\":{\r\n        \"in_port\": 1,\r\n        \"eth_src\": \"dc:a6:32:85:0e:aa\",\r\n        \"eth_dst\": \"dc:a6:32:1b:0b:c1\"\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\": \"SET_FIELD\",\r\n            \"field\": \"eth_src\",\r\n            \"value\": \"dc:a6:32:1b:0b:c1\"\r\n        },\r\n        {\r\n            \"type\": \"SET_FIELD\",\r\n            \"field\": \"eth_dst\",\r\n            \"value\": \"dc:a6:32:85:04:f6\"\r\n        },\r\n        {\r\n            \"type\": \"OUTPUT\",\r\n            \"port\": \"IN_PORT\"\r\n        }\r\n    ]\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/stats/flowentry/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"stats",
+								"flowentry",
+								"add"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "mpp98",
+			"item": [
+				{
+					"name": "transfer_packet_to_mpp",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"dpid\": 242606370263001,\r\n    \"table_id\": 0,\r\n    \"priority\": 100,\r\n    \"match\":{\r\n        \"in_port\": 1,\r\n        \"eth_src\": \"dc:a6:32:1b:29:e2\",\r\n        \"eth_dst\": \"dc:a6:32:85:0f:d9\"\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\": \"SET_FIELD\",\r\n            \"field\": \"eth_src\",\r\n            \"value\": \"dc:a6:32:84:e1:74\"\r\n        },\r\n        {\r\n            \"type\": \"OUTPUT\",\r\n            \"port\": \"LOCAL\"\r\n        }\r\n    ]\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/stats/flowentry/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"stats",
+								"flowentry",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "transfer_packet_to_mp",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"dpid\": 242606370263001,\r\n    \"table_id\": 0,\r\n    \"priority\": 100,\r\n    \"match\":{\r\n        \"in_port\": \"LOCAL\"\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\": \"SET_FIELD\",\r\n            \"field\": \"eth_dst\",\r\n            \"value\": \"dc:a6:32:1b:29:e2\"\r\n        },\r\n        {\r\n            \"type\": \"OUTPUT\",\r\n            \"port\": 1\r\n        }\r\n    ]\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/stats/flowentry/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"stats",
+								"flowentry",
+								"add"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "mpp99",
+			"item": [
+				{
+					"name": "transfer_packet_to_mpp",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"dpid\": 242606370262698,\r\n    \"table_id\": 0,\r\n    \"priority\": 100,\r\n    \"match\":{\r\n        \"in_port\": 1,\r\n        \"eth_src\": \"dc:a6:32:1b:0b:c1\",\r\n        \"eth_dst\": \"dc:a6:32:85:0e:aa\"\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\": \"SET_FIELD\",\r\n            \"field\": \"eth_src\",\r\n            \"value\": \"dc:a6:32:85:04:f6\"\r\n        },\r\n        {\r\n            \"type\": \"OUTPUT\",\r\n            \"port\": \"LOCAL\"\r\n        }\r\n    ]\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/stats/flowentry/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"stats",
+								"flowentry",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "transfer_packet_to_mp",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"dpid\": 242606370262698,\r\n    \"table_id\": 0,\r\n    \"priority\": 100,\r\n    \"match\":{\r\n        \"in_port\": \"LOCAL\"\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\": \"SET_FIELD\",\r\n            \"field\": \"eth_dst\",\r\n            \"value\": \"dc:a6:32:1b:0b:c1\"\r\n        },\r\n        {\r\n            \"type\": \"OUTPUT\",\r\n            \"port\": 1\r\n        }\r\n    ]\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/stats/flowentry/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"stats",
+								"flowentry",
+								"add"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

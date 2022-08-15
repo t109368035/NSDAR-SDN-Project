@@ -1,0 +1,35 @@
+{
+	"info": {
+		"_postman_id": "ebd268b3-2252-473b-aed7-a842372ee870",
+		"name": "pop_vlan",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14365028"
+	},
+	"item": [
+		{
+			"name": "http://localhost:8080/stats/flowentry/add",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"dpid\": 145234203673937,\r\n    \"table_id\": 1,\r\n    \"priority\": 100,\r\n    \"match\":{\r\n        \"dl_vlan\": \"0x1000/0x1000\"\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\":\"POP_VLAN\"\r\n        },\r\n        {\r\n            \"type\": \"OUTPUT\",\r\n            \"port\": \"LOCAL\"\r\n        }\r\n    ]\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/stats/flowentry/add",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"stats",
+						"flowentry",
+						"add"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

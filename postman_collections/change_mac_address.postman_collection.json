@@ -1,0 +1,35 @@
+{
+	"info": {
+		"_postman_id": "57985ed5-4083-4c91-a94a-a0dd76c0d3c5",
+		"name": "change_mac_address",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14365028"
+	},
+	"item": [
+		{
+			"name": "http://localhost:8080/stats/flowentry/add",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"dpid\": 172391058775226,\r\n    \"table_id\": 0,\r\n    \"priority\": 100,\r\n    \"match\":{\r\n        \"in_port\": 2,\r\n        \"eth_type\": 2048\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\": \"SET_FIELD\",\r\n            \"field\": \"eth_src\",\r\n            \"value\": \"9c:c9:eb:d2:1c:ba\"\r\n        },\r\n        {\r\n            \"type\": \"SET_FIELD\",\r\n            \"field\": \"eth_dst\",\r\n            \"value\": \"84:16:f9:1e:44:5f\"\r\n        },\r\n        {\r\n            \"type\":\"SET_FIELD\",\r\n            \"field\":\"ipv4_src\",\r\n            \"value\": \"10.10.1.15\"\r\n        },\r\n        {\r\n            \"type\": \"OUTPUT\",\r\n            \"port\": 1\r\n        }\r\n    ]\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/stats/flowentry/add",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"stats",
+						"flowentry",
+						"add"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

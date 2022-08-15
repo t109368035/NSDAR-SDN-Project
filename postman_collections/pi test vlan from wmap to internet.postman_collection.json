@@ -1,0 +1,959 @@
+{
+	"info": {
+		"_postman_id": "38ef9757-8da0-45f7-8596-86e032949b3c",
+		"name": "pi test vlan from wmap to internet",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14365028"
+	},
+	"item": [
+		{
+			"name": "map15",
+			"item": [
+				{
+					"name": "table:0",
+					"item": [
+						{
+							"name": "inport=3",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"dpid\": 242606370251124,\r\n    \"table_id\": 0,\r\n    \"priority\": 100,\r\n    \"match\":{\r\n        \"in_port\": 3\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\":\"GOTO_TABLE\",\r\n            \"table_id\": 1\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/stats/flowentry/add",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"stats",
+										"flowentry",
+										"add"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "iperf_send",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"dpid\": 242606370251124,\r\n    \"table_id\": 0,\r\n    \"priority\": 6000,\r\n    \"match\":{\r\n        \"tcp_dst\": 5202,\r\n        \"ip_proto\": 6,\r\n        \"eth_type\": 2048\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\": \"OUTPUT\",\r\n            \"port\": 1\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/stats/flowentry/add",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"stats",
+										"flowentry",
+										"add"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "iperf_recive",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"dpid\": 242606370251124,\r\n    \"table_id\": 0,\r\n    \"priority\": 6000,\r\n    \"match\":{\r\n        \"tcp_src\": 5202,\r\n        \"ip_proto\": 6,\r\n        \"eth_type\": 2048\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\": \"OUTPUT\",\r\n            \"port\": \"LOCAL\"\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/stats/flowentry/add",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"stats",
+										"flowentry",
+										"add"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "inport=1",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"dpid\": 242606370251124,\r\n    \"table_id\": 0,\r\n    \"priority\": 100,\r\n    \"match\":{\r\n        \"in_port\": 1\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\":\"GOTO_TABLE\",\r\n            \"table_id\": 2\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/stats/flowentry/add",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"stats",
+										"flowentry",
+										"add"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "inport=2",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"dpid\": 242606370251124,\r\n    \"table_id\": 0,\r\n    \"priority\": 100,\r\n    \"match\":{\r\n        \"in_port\": 2\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\":\"GOTO_TABLE\",\r\n            \"table_id\": 2\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/stats/flowentry/add",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"stats",
+										"flowentry",
+										"add"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "allow_arp",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"dpid\": 242606370251124,\r\n    \"table_id\": 0,\r\n    \"priority\": 61000,\r\n    \"match\":{\r\n        \"eth_type\": 2054\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\":\"OUTPUT\",\r\n            \"port\": \"normal\"\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/stats/flowentry/add",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"stats",
+										"flowentry",
+										"add"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "allow_dhcp_67",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"dpid\": 242606370251124,\r\n    \"table_id\": 0,\r\n    \"priority\": 61000,\r\n    \"match\":{\r\n        \"eth_type\": 2048,\r\n        \"udp_src\" : 67,\r\n        \"ip_proto\": 17\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\":\"OUTPUT\",\r\n            \"port\": \"normal\"\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/stats/flowentry/add",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"stats",
+										"flowentry",
+										"add"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "allow_dhcp_68",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"dpid\": 242606370251124,\r\n    \"table_id\": 0,\r\n    \"priority\": 61000,\r\n    \"match\":{\r\n        \"eth_type\": 2048,\r\n        \"udp_src\" : 68,\r\n        \"ip_proto\": 17\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\":\"OUTPUT\",\r\n            \"port\": \"normal\"\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/stats/flowentry/add",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"stats",
+										"flowentry",
+										"add"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "recive olsr",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"dpid\": 242606370251124,\r\n    \"table_id\": 0,\r\n    \"priority\": 61000,\r\n    \"match\":{\r\n        \"in_port\": 1,\r\n        \"ipv4_src\": \"10.10.1.55\",\r\n        \"eth_type\": 2048,\r\n        \"udp_src\" : 698,\r\n        \"ip_proto\": 17\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\":\"OUTPUT\",\r\n            \"port\": \"LOCAL\"\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/stats/flowentry/add",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"stats",
+										"flowentry",
+										"add"
+									]
+								},
+								"description": "recive"
+							},
+							"response": []
+						},
+						{
+							"name": "send olsr",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"dpid\": 242606370251124,\r\n    \"table_id\": 0,\r\n    \"priority\": 61000,\r\n    \"match\":{\r\n        \"in_port\": \"LOCAL\",\r\n        \"ipv4_src\": \"10.10.1.15\",\r\n        \"eth_type\": 2048,\r\n        \"udp_src\" : 698,\r\n        \"ip_proto\": 17\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\":\"OUTPUT\",\r\n            \"port\": 1\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/stats/flowentry/add",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"stats",
+										"flowentry",
+										"add"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "table:1(push vlan)",
+					"item": [
+						{
+							"name": "push vlan(id:4097)",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"dpid\": 242606370251124,\r\n    \"table_id\": 1,\r\n    \"priority\": 100 ,\r\n    \"match\":{\r\n        \"ipv4_src\": \"10.10.2.100\",\r\n        \"eth_type\": 2048\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\": \"PUSH_VLAN\",\r\n            \"ethertype\": 33024\r\n        },\r\n        {\r\n            \"type\": \"SET_FIELD\",\r\n            \"field\": \"vlan_vid\",\r\n            \"value\": 4097\r\n        },\r\n        {\r\n            \"type\":\"GOTO_TABLE\",\r\n            \"table_id\": 3\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/stats/flowentry/add",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"stats",
+										"flowentry",
+										"add"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "table:2(pop vlan)",
+					"item": [
+						{
+							"name": "pop vlan(all)",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"dpid\": 242606370251124,\r\n    \"table_id\": 2,\r\n    \"priority\": 100,\r\n    \"match\":{\r\n        \"dl_vlan\": \"0x1000/0x1000\"\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\":\"POP_VLAN\"\r\n        },\r\n        {\r\n            \"type\":\"GOTO_TABLE\",\r\n            \"table_id\": 4\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/stats/flowentry/add",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"stats",
+										"flowentry",
+										"add"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "table:3(to node)",
+					"item": [
+						{
+							"name": "to node(id:4097)",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"dpid\": 242606370251124,\r\n    \"table_id\": 3,\r\n    \"priority\": 100,\r\n    \"match\":{\r\n        \"dl_vlan\": 4097\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\": \"SET_FIELD\",\r\n            \"field\": \"eth_src\",\r\n            \"value\": \"dc:a6:32:84:e1:74\"\r\n        },\r\n        {\r\n            \"type\": \"SET_FIELD\",\r\n            \"field\": \"eth_dst\",\r\n            \"value\": \"dc:a6:32:1b:29:e2\"\r\n        },\r\n        {\r\n            \"type\": \"SET_QUEUE\",\r\n            \"queue_id\": 0\r\n        },\r\n        {\r\n            \"type\": \"OUTPUT\",\r\n            \"port\": 1\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/stats/flowentry/add",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"stats",
+										"flowentry",
+										"add"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "table:4(to device)",
+					"item": [
+						{
+							"name": "to device(id:4097)",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"dpid\": 242606370251124,\r\n    \"table_id\": 4,\r\n    \"priority\": 100,\r\n    \"match\":{\r\n        \"ipv4_dst\": \"10.10.2.100\",\r\n        \"eth_type\": 2048,\r\n        \"eth_dst\": \"dc:a6:32:84:e1:74\",\r\n        \"eth_src\": \"dc:a6:32:1b:29:e2\"\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\": \"SET_FIELD\",\r\n            \"field\": \"eth_src\",\r\n            \"value\": \"dc:a6:32:84:e1:74\"\r\n        },\r\n        {\r\n            \"type\": \"SET_FIELD\",\r\n            \"field\": \"eth_dst\",\r\n            \"value\": \"04:92:26:7e:10:78\"\r\n        },\r\n        {\r\n            \"type\": \"OUTPUT\",\r\n            \"port\": 3\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/stats/flowentry/add",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"stats",
+										"flowentry",
+										"add"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "mp55",
+			"item": [
+				{
+					"name": "iperf(annoy test)",
+					"item": [
+						{
+							"name": "iperf_send_5202",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"dpid\": 242606363322850,\r\n    \"table_id\": 0,\r\n    \"priority\": 6000,\r\n    \"match\":{\r\n        \"tcp_src\": 5202,\r\n        \"ip_proto\": 6,\r\n        \"eth_type\": 2048\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\": \"OUTPUT\",\r\n            \"port\": 1\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/stats/flowentry/add",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"stats",
+										"flowentry",
+										"add"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "iperf_send_5201",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"dpid\": 242606363322850,\r\n    \"table_id\": 0,\r\n    \"priority\": 6000,\r\n    \"match\":{\r\n        \"tcp_dst\": 5201,\r\n        \"ip_proto\": 6,\r\n        \"eth_type\": 2048\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\": \"OUTPUT\",\r\n            \"port\": 1\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/stats/flowentry/add",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"stats",
+										"flowentry",
+										"add"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "iperf_recive_5202",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"dpid\": 242606363322850,\r\n    \"table_id\": 0,\r\n    \"priority\": 6000,\r\n    \"match\":{\r\n        \"tcp_dst\": 5202,\r\n        \"ip_proto\": 6,\r\n        \"eth_type\": 2048\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\": \"OUTPUT\",\r\n            \"port\": \"LOCAL\"\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/stats/flowentry/add",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"stats",
+										"flowentry",
+										"add"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "iperf_recive_5201",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"dpid\": 242606363322850,\r\n    \"table_id\": 0,\r\n    \"priority\": 6000,\r\n    \"match\":{\r\n        \"tcp_src\": 5201,\r\n        \"ip_proto\": 6,\r\n        \"eth_type\": 2048\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\": \"OUTPUT\",\r\n            \"port\": \"LOCAL\"\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/stats/flowentry/add",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"stats",
+										"flowentry",
+										"add"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "to mpp(id:4097)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"dpid\": 242606363322850,\r\n    \"table_id\": 0,\r\n    \"priority\": 100,\r\n    \"match\":{\r\n        \"dl_vlan\": 4097,\r\n        \"eth_src\": \"dc:a6:32:84:e1:74\",\r\n        \"eth_dst\": \"dc:a6:32:1b:29:e2\"\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\": \"SET_FIELD\",\r\n            \"field\": \"eth_src\",\r\n            \"value\": \"dc:a6:32:1b:29:e2\"\r\n        },\r\n        {\r\n            \"type\": \"SET_FIELD\",\r\n            \"field\": \"eth_dst\",\r\n            \"value\": \"dc:a6:32:85:0f:d9\"\r\n        },\r\n        {\r\n            \"type\": \"OUTPUT\",\r\n            \"port\": \"IN_PORT\"\r\n        }\r\n    ]\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/stats/flowentry/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"stats",
+								"flowentry",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "to map(id:4097)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"dpid\": 242606363322850,\r\n    \"table_id\": 0,\r\n    \"priority\": 100,\r\n    \"match\":{\r\n        \"dl_vlan\": 4097,\r\n        \"eth_src\": \"dc:a6:32:85:0f:d9\",\r\n        \"eth_dst\": \"dc:a6:32:1b:29:e2\"\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\": \"SET_FIELD\",\r\n            \"field\": \"eth_src\",\r\n            \"value\": \"dc:a6:32:1b:29:e2\"\r\n        },\r\n        {\r\n            \"type\": \"SET_FIELD\",\r\n            \"field\": \"eth_dst\",\r\n            \"value\": \"dc:a6:32:84:e1:74\"\r\n        },\r\n        {\r\n            \"type\": \"OUTPUT\",\r\n            \"port\": \"IN_PORT\"\r\n        }\r\n    ]\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/stats/flowentry/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"stats",
+								"flowentry",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "allow_arp",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"dpid\": 242606363322850,\r\n    \"table_id\": 0,\r\n    \"priority\": 61000,\r\n    \"match\":{\r\n        \"eth_type\": 2054\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\":\"OUTPUT\",\r\n            \"port\": \"normal\"\r\n        }\r\n    ]\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/stats/flowentry/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"stats",
+								"flowentry",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "recive olsr 15",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"dpid\": 242606363322850,\r\n    \"table_id\": 0,\r\n    \"priority\": 61000,\r\n    \"match\":{\r\n        \"in_port\": 1,\r\n        \"ipv4_src\": \"10.10.1.15\",\r\n        \"eth_type\": 2048,\r\n        \"udp_src\" : 698,\r\n        \"ip_proto\": 17\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\":\"OUTPUT\",\r\n            \"port\": \"LOCAL\"\r\n        }\r\n    ]\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/stats/flowentry/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"stats",
+								"flowentry",
+								"add"
+							]
+						},
+						"description": "recive"
+					},
+					"response": []
+				},
+				{
+					"name": "send olsr",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"dpid\": 242606363322850,\r\n    \"table_id\": 0,\r\n    \"priority\": 61000,\r\n    \"match\":{\r\n        \"in_port\": \"LOCAL\",\r\n        \"ipv4_src\": \"10.10.1.55\",\r\n        \"eth_type\": 2048,\r\n        \"udp_src\" : 698,\r\n        \"ip_proto\": 17\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\":\"OUTPUT\",\r\n            \"port\": 1\r\n        }\r\n    ]\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/stats/flowentry/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"stats",
+								"flowentry",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "recive olsr 98",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"dpid\": 242606363322850,\r\n    \"table_id\": 0,\r\n    \"priority\": 61000,\r\n    \"match\":{\r\n        \"in_port\": 1,\r\n        \"ipv4_src\": \"10.10.1.98\",\r\n        \"eth_type\": 2048,\r\n        \"udp_src\" : 698,\r\n        \"ip_proto\": 17\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\":\"OUTPUT\",\r\n            \"port\": \"LOCAL\"\r\n        }\r\n    ]\r\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/stats/flowentry/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"stats",
+								"flowentry",
+								"add"
+							]
+						},
+						"description": "recive"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "mpp98",
+			"item": [
+				{
+					"name": "table:0",
+					"item": [
+						{
+							"name": "inport=1",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"dpid\": 242606370263001,\r\n    \"table_id\": 0,\r\n    \"priority\": 100,\r\n    \"match\":{\r\n        \"in_port\": 1\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\":\"GOTO_TABLE\",\r\n            \"table_id\": 2\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/stats/flowentry/add",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"stats",
+										"flowentry",
+										"add"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "inport=local",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"dpid\": 242606370263001,\r\n    \"table_id\": 0,\r\n    \"priority\": 100,\r\n    \"match\":{\r\n        \"in_port\": \"LOCAL\"\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\":\"GOTO_TABLE\",\r\n            \"table_id\": 1\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/stats/flowentry/add",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"stats",
+										"flowentry",
+										"add"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "allow_arp",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"dpid\": 242606370263001,\r\n    \"table_id\": 0,\r\n    \"priority\": 61000,\r\n    \"match\":{\r\n        \"in_port\": 2,\r\n        \"eth_type\": 2054\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\":\"OUTPUT\",\r\n            \"port\": 2\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/stats/flowentry/add",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"stats",
+										"flowentry",
+										"add"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "send olsr",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"dpid\": 242606370263001,\r\n    \"table_id\": 0,\r\n    \"priority\": 61000,\r\n    \"match\":{\r\n        \"in_port\": \"LOCAL\",\r\n        \"ipv4_src\": \"10.10.1.98\",\r\n        \"eth_type\": 2048,\r\n        \"udp_src\" : 698,\r\n        \"ip_proto\": 17\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\":\"OUTPUT\",\r\n            \"port\": 1\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/stats/flowentry/add",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"stats",
+										"flowentry",
+										"add"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "recive olsr",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"dpid\": 242606370263001,\r\n    \"table_id\": 0,\r\n    \"priority\": 61000,\r\n    \"match\":{\r\n        \"in_port\": 1,\r\n        \"ipv4_src\": \"10.10.1.55\",\r\n        \"eth_type\": 2048,\r\n        \"udp_src\" : 698,\r\n        \"ip_proto\": 17\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\":\"OUTPUT\",\r\n            \"port\": \"LOCAL\"\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/stats/flowentry/add",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"stats",
+										"flowentry",
+										"add"
+									]
+								},
+								"description": "recive"
+							},
+							"response": []
+						},
+						{
+							"name": "iperf_send_5201",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"dpid\": 242606370263001,\r\n    \"table_id\": 0,\r\n    \"priority\": 6000,\r\n    \"match\":{\r\n        \"tcp_src\": 5201,\r\n        \"ip_proto\": 6,\r\n        \"eth_type\": 2048\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\": \"OUTPUT\",\r\n            \"port\": 1\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/stats/flowentry/add",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"stats",
+										"flowentry",
+										"add"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "iperf_recive_5201",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"dpid\": 242606370263001,\r\n    \"table_id\": 0,\r\n    \"priority\": 6000,\r\n    \"match\":{\r\n        \"tcp_dst\": 5201,\r\n        \"ip_proto\": 6,\r\n        \"eth_type\": 2048\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\": \"OUTPUT\",\r\n            \"port\": \"LOCAL\"\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/stats/flowentry/add",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"stats",
+										"flowentry",
+										"add"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "table:1(push vlan)",
+					"item": [
+						{
+							"name": "push vlan(id:4097)",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"dpid\": 242606370263001,\r\n    \"table_id\": 1,\r\n    \"priority\": 100,\r\n    \"match\":{\r\n        \"ipv4_dst\": \"10.10.2.100\",\r\n        \"eth_type\": 2048\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\": \"PUSH_VLAN\",\r\n            \"ethertype\": 33024\r\n        },\r\n        {\r\n            \"type\": \"SET_FIELD\",\r\n            \"field\": \"vlan_vid\",\r\n            \"value\": 4097\r\n        },\r\n        {\r\n            \"type\":\"GOTO_TABLE\",\r\n            \"table_id\": 3\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/stats/flowentry/add",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"stats",
+										"flowentry",
+										"add"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "table:2(pop vlan)",
+					"item": [
+						{
+							"name": "pop vlan(all)",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"dpid\": 242606370263001,\r\n    \"table_id\": 2,\r\n    \"priority\": 100,\r\n    \"match\":{\r\n        \"dl_vlan\": \"0x1000/0x1000\"\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\":\"POP_VLAN\"\r\n        },\r\n        {\r\n            \"type\":\"GOTO_TABLE\",\r\n            \"table_id\": 4\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/stats/flowentry/add",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"stats",
+										"flowentry",
+										"add"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "table:3(to node)",
+					"item": [
+						{
+							"name": "to node(id:4097)",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"dpid\": 242606370263001,\r\n    \"table_id\": 3,\r\n    \"priority\": 100,\r\n    \"match\":{\r\n        \"dl_vlan\": 4097\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\": \"SET_FIELD\",\r\n            \"field\": \"eth_dst\",\r\n            \"value\": \"dc:a6:32:1b:29:e2\"\r\n        },\r\n        {\r\n            \"type\": \"SET_QUEUE\",\r\n            \"queue_id\": 0\r\n        },\r\n        {\r\n            \"type\": \"OUTPUT\",\r\n            \"port\": 1\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/stats/flowentry/add",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"stats",
+										"flowentry",
+										"add"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "table:4(to internet)",
+					"item": [
+						{
+							"name": "to internet(id:4097)",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"dpid\": 242606370263001,\r\n    \"table_id\": 4,\r\n    \"priority\": 100,\r\n    \"match\":{\r\n        \"ipv4_src\": \"10.10.2.100\",\r\n        \"eth_type\": 2048,\r\n        \"eth_src\": \"dc:a6:32:1b:29:e2\",\r\n        \"eth_dst\": \"dc:a6:32:85:0f:d9\"\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\": \"SET_FIELD\",\r\n            \"field\": \"eth_src\",\r\n            \"value\": \"04:92:26:7e:10:78\"\r\n        },\r\n        {\r\n            \"type\": \"OUTPUT\",\r\n            \"port\": \"LOCAL\"\r\n        }\r\n    ]\r\n}"
+								},
+								"url": {
+									"raw": "http://localhost:8080/stats/flowentry/add",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"stats",
+										"flowentry",
+										"add"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,60 @@
+{
+	"info": {
+		"_postman_id": "348ece2c-00d8-4f45-89c2-8ae3c23b137d",
+		"name": "allow_dhcp_packet",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14365028"
+	},
+	"item": [
+		{
+			"name": "67",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"dpid\": 172391058775226,\r\n    \"table_id\": 0,\r\n    \"priority\": 61000,\r\n    \"match\":{\r\n        \"eth_type\": 2048,\r\n        \"udp_src\" : 67,\r\n        \"ip_proto\": 17\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\":\"OUTPUT\",\r\n            \"port\": \"normal\"\r\n        }\r\n    ]\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/stats/flowentry/add",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"stats",
+						"flowentry",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:8080/stats/flowentry/add",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"dpid\": 172391058775226,\r\n    \"table_id\": 0,\r\n    \"priority\": 61000,\r\n    \"match\":{\r\n        \"eth_type\": 2048,\r\n        \"udp_src\" : 68,\r\n        \"ip_proto\": 17\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\":\"OUTPUT\",\r\n            \"port\": \"normal\"\r\n        }\r\n    ]\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/stats/flowentry/add",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"stats",
+						"flowentry",
+						"add"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

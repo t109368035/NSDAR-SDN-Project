@@ -1,0 +1,35 @@
+{
+	"info": {
+		"_postman_id": "c08325d5-1e15-47f7-a5df-77f89390a5b5",
+		"name": "goto_table",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14365028"
+	},
+	"item": [
+		{
+			"name": "http://localhost:8080/stats/flowentry/add",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"dpid\": 172391058775226,\r\n    \"table_id\": 0,\r\n    \"priority\": 100,\r\n    \"match\":{\r\n        \"in_port\": 2,\r\n        \"dl_vlan\": \"0x0000\",\r\n        \"eth_src\": \"04:92:26:7e:10:78\"\r\n    },\r\n    \"actions\":[\r\n        {\r\n            \"type\": \"PUSH_VLAN\",\r\n            \"ethertype\": 33024\r\n        },\r\n        {\r\n            \"type\": \"SET_FIELD\",\r\n            \"field\": \"vlan_vid\",\r\n            \"value\": 4097\r\n        },\r\n        {\r\n            \"type\":\"GOTO_TABLE\",\r\n            \"table_id\": 1\r\n        }\r\n    ]\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/stats/flowentry/add",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"stats",
+						"flowentry",
+						"add"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
