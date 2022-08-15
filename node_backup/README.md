@@ -6,6 +6,12 @@
 - paho-mqtt: 1.5.0
 - iperf3 0.1.11
 
+### 設定Wi-Fi國碼為台灣
+```
+sudo -i
+echo "options cfg80211 ieee80211_regdom=TW"  >  /etc/modprobe.d/cfg80211.conf 
+```
+
 ### 安裝OLSR資訊
 ```
 sudo apt-get install olsrd
