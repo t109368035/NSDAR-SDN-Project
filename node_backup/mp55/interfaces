@@ -1,0 +1,44 @@
+# interfaces(5) file used by ifup(8) and ifdown(8)
+
+# Please note that this file is written to be used with dhcpcd
+# For static IP, consult /etc/dhcpcd.conf and 'man dhcpcd.conf'
+
+# Include files from /etc/network/interfaces.d:
+source-directory /etc/network/interfaces.d
+
+#auto eth0
+#iface eth0 inet static
+#address 140.124.71.152
+#netmask 255.255.255.0
+#gateway 140.124.71.254
+#dns-nameservers 140.124.13.1 140.124.13.2
+
+auto eth0
+iface eth0 inet static
+address 3.3.3.4
+netmask 255.255.255.0
+
+auto eth1
+iface eth1 inet static
+address 192.168.1.55
+netmask 255.255.255.0
+gateway 192.168.1.1
+dns-nameservers 140.124.13.1 140.124.13.2
+
+auto wlan0
+iface wlan0 inet manual
+#wpa-ssid "phtseng_AX3000"
+#wpa-psk "eelab210"
+#dns-nameservers 140.124.13.1 140.124.13.2
+#address 11.11.11.223
+#netmask 255.255.255.0
+wireless-mode ad-hoc
+wireless-channel 36
+wireless-essid ch36
+
+allow-hotplug ovsbr
+iface ovsbr inet static
+#ether dc:a6:32:1b:29:e2
+address 10.10.1.55
+netmask 255.255.255.0
+
