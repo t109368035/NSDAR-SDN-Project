@@ -17,5 +17,11 @@ sudo apt-get install olsrd
 ### 安裝rpcapd資訊
 - [rpcapd-for-RPi](https://github.com/idkpmiller/rpcapd-for-RPi)
 
+### 安裝DHCP Server資訊(only necessary on map15 and map5)
+```
+sudo apt-get install isc-dhcp-server
+```
+
 ### 安裝ntopng資訊(only necessary on map15 and map5)
 - [ntopng](https://packages.ntop.org/)
+
