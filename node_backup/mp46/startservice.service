@@ -1,0 +1,12 @@
+[Unit]
+Description=Start service
+ConditionFileIsExecutable=/home/pi/Desktop/start_service.sh
+After=openvswitch-switch.service
+
+[Service]
+Type=forking
+ExecStart=/home/pi/Desktop/start_service.sh
+Environment="PYTHONPATH=$PYTHONPATH:/usr/local/lib/python3.7/dist-packages"
+
+[Install]
+WantedBy=multi-user.target
