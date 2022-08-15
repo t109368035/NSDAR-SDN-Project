@@ -125,14 +125,14 @@ color: rgb(255, 151, 151);</string>
   <widget class="QPushButton" name="ETT_Button">
    <property name="geometry">
     <rect>
-     <x>990</x>
+     <x>980</x>
      <y>770</y>
-     <width>111</width>
+     <width>131</width>
      <height>51</height>
     </rect>
    </property>
    <property name="text">
-    <string>COLLECT ETT</string>
+    <string>Run Slice Manager </string>
    </property>
   </widget>
  </widget>
