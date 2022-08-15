@@ -6,6 +6,11 @@
 - paho-mqtt: 1.5.0
 - iperf3 0.1.11
 
+### 安裝OLSR資訊
+```
+sudo apt-get install olsrd
+```
+
 ### 安裝OVS資訊
 - [Install OVS tutorial](https://hackmd.io/@TWvQM7zrTEyzbIKJIj8l2w/ryI3JV9wY)
 
