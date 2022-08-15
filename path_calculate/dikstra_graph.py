@@ -19,13 +19,13 @@ class Graph:
         wrong_edges = [i for i in edges if len(i) not in [2, 3]]
         if wrong_edges:
             raise ValueError('Wrong edges data: {}'.format(wrong_edges))
-        """static_edges = [('map15', 'map16', 0), ('mp55', 'mp56', 0), ('mp56', 'mp55', 0), ('mpp98', 'out', 0),
+        static_edges = [('map15', 'map16', 0), ('mp55', 'mp56', 0), ('mp56', 'mp55', 0), ('mpp98', 'out', 0),
                         ('mpp99', 'out', 0), ('map5', 'map6', 0), ('mp45', 'mp46', 0), ('mp46', 'mp45', 0),
-                        ('mpp88', 'out', 0), ('mpp89', 'out', 0)]"""
-        static_edges = [('map15', 'map16', 0), ('mp55', 'mp56', 0), ('mp56', 'mp55', 0), ('mpp98', 'mpp99', 0),
+                        ('mpp88', 'out', 0), ('mpp89', 'out', 0)]
+        """static_edges = [('map15', 'map16', 0), ('mp55', 'mp56', 0), ('mp56', 'mp55', 0), ('mpp98', 'mpp99', 0),
                         ('mpp99', 'mpp98', 0), ('map5', 'map6', 0), ('mp45', 'mp46', 0), ('mp46', 'mp45', 0),
                         ('mpp88', 'mpp89', 0), ('mpp89', 'mpp88', 0), ('mpp1', 'out', 0), ('mpp2', 'out', 0),
-                        ('mpp3', 'out', 0), ('mpp4', 'out', 0), ('mpp5', 'out', 0), ('mpp6', 'out', 0)]
+                        ('mpp3', 'out', 0), ('mpp4', 'out', 0), ('mpp5', 'out', 0), ('mpp6', 'out', 0)]"""
         edges = edges + static_edges
         self.edges = [make_edge(*edge) for edge in edges]
 
