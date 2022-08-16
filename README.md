@@ -97,4 +97,6 @@
 
 ## 額外事項
 - 實驗上有任何設定問題可以先查詢我先前的紀錄，像是備份映像欓以及Linux上設定問題等等相關事項。
-  - [[實驗記錄](https://hackmd.io/@TWvQM7zrTEyzbIKJIj8l2w/Sy1uF2tVu)
+  - [[實驗記錄](https://hackmd.io/@TWvQM7zrTEyzbIKJIj8l2w/Sy1uF2tVu)]
+- 論文內數據圖以外的圖檔皆存在皆存在雲端硬碟內。
+  - [[論文圖檔](https://drive.google.com/drive/folders/1JhQLlqsazSmdk2CoZOpwQdGUHP59aLD3?usp=sharing)]
